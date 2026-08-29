@@ -7,7 +7,7 @@ import { PATHS } from "@/modules/paths";
 // --- Configuration: Define your Application Details ---
 const APP_NAME_SHORT = "puerta"; // CHANGE THIS: e.g., "myapp", "myeditor" (no spaces!)
 const APP_NAME = app.getName(); // Or hardcode: "My Awesome App";
-const APP_DESCRIPTION = "A modern privacy-focused browser with a minimalistic design."; // CHANGE THIS if needed
+const APP_DESCRIPTION = "Puerta Browser — your gateway to the internet."; // CHANGE THIS if needed
 
 // --- Association Data (from your JSON example) ---
 const associations = {

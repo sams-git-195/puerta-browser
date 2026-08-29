@@ -77,3 +77,21 @@ This build pipeline contains Widevine VMP Signing Capabilities. However, you wil
 Create an Account: https://github.com/castlabs/electron-releases/wiki/EVS#creating-an-evs-account
 
 Once logged in, the app will be automatically VMP-signed, and you can enjoy Widevine Protected Content!
+
+## Submitting changes
+
+1. Fork/branch from `main` and make your change.
+2. Before pushing, make sure these pass locally (CI runs the same checks):
+   - `bun run typecheck`
+   - `bun run lint`
+   - `bun run format` (CI fails if formatting produces a diff)
+   - `bun run test:unit` (add or update tests for behavior changes)
+3. Open a pull request — the PR template's checklist mirrors CI.
+4. Contributions are licensed under GPL-3.0, like the project itself.
+
+## AI coding agents
+
+This repo ships agent configuration: [AGENTS.md](./AGENTS.md) is the source of
+truth for any AI coding agent (setup, commands, coding practices), and
+[CLAUDE.md](./CLAUDE.md) adds Claude-specific model policy. If you use an AI
+assistant, point it at those files.
