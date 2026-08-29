@@ -1,16 +1,26 @@
 # Bookmarks — Design Spec
 
-Date: 2026-08-29
-Status: awaiting review
+Date: 2026-08-29 (revised same day: Dia-style live-tab semantics per Sam)
+Status: approved direction, implementing
 Branch: `feat/bookmarks`
 
 ## Goal
 
-A bookmarks ("favourites") system in the Zen/Arc mold: a compact tree of
-saved pages in the sidebar, rendered **below the pinned-tab grid and above
-the tab list**, with folders and plain bookmarks freely mixed. Profile-scoped
-(decided): one bookmark tree per profile, visible in every space of that
-profile.
+A bookmarks ("favourites") system in the Dia mold: a compact tree of saved
+pages in the sidebar, rendered **below the pinned-tab grid and above the tab
+list**, with folders and plain bookmarks freely mixed. Profile-scoped
+(decided): one bookmark tree per profile, visible in every space.
+
+**Behavior model (revised): a bookmark acts like a pinned tab, not a
+shortcut.** Clicking a bookmark activates its live tab if one exists in the
+current space, or creates one (ephemeral — hidden from the tab list) and
+associates it, exactly like the pinned-tab grid. Closing the live tab returns
+the bookmark to its idle state; the bookmark row reflects active and
+**sleeping** state. Bookmark tabs participate in automatic tab sleeping
+("unload to save RAM"): a background bookmark tab unloads after the
+`sleepTabAfter` interval and its row shows the moon indicator; clicking wakes
+it. Each space gets its own instance (one associated tab per space), matching
+pinned tabs.
 
 Not in scope for v1: a bookmarks manager page, import from other browsers,
 bookmark tags/search, a bookmarks bar in the topbar, per-space trees, sync.
@@ -62,26 +72,47 @@ cache, typed events):
 - `getForProfile(profileId)` returns a flat array; the renderer builds the tree.
 - Validation: `move` rejects cycles (walking `parentId` chain) and re-parenting
   across profiles; `create` requires `url` for bookmarks and forbids it for folders.
-- Events: `changed(profileId)` → pushes the profile's flat list to renderers
-  over `bookmarks:on-changed` (whole-list refresh; bookmark counts are small,
+- Events: `changed` → pushes all profiles' flat lists to renderers over
+  `bookmarks:on-changed` (whole-list refresh; bookmark counts are small,
   so no delta protocol).
+- **Live-tab associations, mirroring `PinnedTabsController`:** in-memory
+  `bookmarkId → spaceId → tabId` plus a reverse map; `associateTab` /
+  `dissociateTab` / `onBrowserTabDestroyed` wired to the tabs controller's
+  `tab-removed` event. Associated tabs are created **ephemeral** so they never
+  appear in the sidebar tab list and are never persisted as tabs. Renderer
+  payloads carry `associatedTabIdsBySpace` per bookmark, exactly like
+  `PinnedTabData`; the renderer resolves active/sleeping state by looking the
+  tab id up in the regular tabs data (ephemeral tabs are already serialized
+  to the renderer).
+
+## Tab sleeping for bookmark tabs
+
+The maintenance loop in `TabsController` currently skips ephemeral tabs
+entirely. Change: ephemeral tabs (bookmark AND pinned associations) now
+participate in **sleep** — sleeping keeps the association alive and frees
+~20–50MB per tab, waking transparently on click — while remaining excluded
+from **archive** (archive destroys the tab; associations should not silently
+vanish on a timer). The decision logic is extracted into a pure, unit-tested
+helper (`decideTabMaintenance`) in `src/shared`.
 
 ## IPC surface (`flow.bookmarks`)
 
 `src/shared/flow/interfaces/browser/bookmarks.ts` + `src/main/ipc/browser/bookmarks.ts`
 + preload bindings, following the pinned-tabs pattern:
 
-- `getAll(profileId)` / `onChanged(callback)`
-- `create(input)`, `update(uniqueId, patch)`, `move(uniqueId, parentId, position)`, `remove(uniqueId)`
-- `open(uniqueId, disposition: "current" | "new-tab" | "glance")` — "current"
-  navigates the focused tab (or opens one), "new-tab" opens a background tab;
-  "glance" opens the bookmark as a glance popup over the current tab when
-  glance is enabled, else falls back to a foreground new tab.
-
-Adding the current page: the address-bar area gets a bookmark toggle
-(star/`BookmarkIcon`) that creates/removes a bookmark for the focused tab's
-URL at the top level, and the sidebar section header gets "add current page" +
-"new folder" buttons.
+- `getData()` (all profiles, flat lists with associations) / `onChanged(callback)`
+- `click(uniqueId)` — pinned-tab semantics: activate the associated live tab
+  for the current space (waking it if asleep), or create an ephemeral tab at
+  the bookmark's URL and associate it
+- `createFromTab(tabId, parentId?)` — bookmark the given tab: creates the
+  node, marks the tab ephemeral (leaves the tab list), associates it. This
+  is what the address-bar star and tab context menu use.
+- `createFolder(profileId, title, parentId?)`, `rename(uniqueId, title)`,
+  `move(uniqueId, parentId, position)`, `remove(uniqueId)` (destroys the
+  subtree's associated ephemeral tabs so they don't leak)
+- `closeTab(uniqueId)` — destroy the associated tab for the current space
+  (the bookmark stays; this is the row's ✕ affordance)
+- `showContextMenu(uniqueId)` — main-process menu
 
 ## Renderer
 
@@ -100,21 +131,28 @@ New components under `browser-sidebar/_components/bookmarks/`:
   `localStorage`); flat list → tree built with a `useMemo` on `parentId`.
 - A new `BookmarksProvider` (context) subscribes to `flow.bookmarks.onChanged`.
 
+Row states (Dia-style): idle (no associated tab in current space — dimmed),
+active (associated tab exists; highlighted when focused), sleeping (associated
+tab is asleep — moon icon, matching the tab-list treatment). The ✕ affordance
+on hover closes the live tab and returns the row to idle; it never deletes
+the bookmark.
+
 Interactions:
 
-- Click → `open(uniqueId, "current")`; middle-click → `"new-tab"`;
-  Shift+click → `"glance"`.
-- Context menu (main-process `Menu`, like tabs): Open / Open in New Tab /
-  Open in Glance / Rename / Delete; folders: New Bookmark Here / New Folder /
-  Rename / Delete.
-- Rename inline: the row swaps to an input on context-menu Rename (matches
-  space rename UX elsewhere in settings).
+- Click → `flow.bookmarks.click(id)` (activate-or-create, waking if asleep);
+  folders toggle expansion.
+- Address-bar star (`BookmarkIcon`, next to the extension actions): bookmarks
+  the focused tab via `createFromTab`; filled when the focused tab IS an
+  associated bookmark tab.
+- Tab context menu gains "Bookmark This Page" (same `createFromTab` path).
+- Bookmark context menu (main-process `Menu`): Close Tab (when a live tab
+  exists) / Rename / Copy URL / Delete; folders: New Folder Inside / Rename /
+  Delete. Rename swaps the row to an inline input.
 - Drag & drop with `@atlaskit/pragmatic-drag-and-drop` (already used for tabs
   and pinned tabs — no new library):
   - reorder among siblings (closest-edge indicator),
   - drop *onto* a folder row to move into it,
-  - drag a **tab** from the tab list onto the bookmarks section to bookmark it,
-  - v1 does not support dragging bookmarks out to the tab list.
+  - v1 does not support dragging tabs into the section or bookmarks out.
 
 ## Error handling
 
@@ -126,12 +164,17 @@ Interactions:
 
 ## Testing
 
-- `tests/shared/` unit tests for the pure tree helpers (flat list → tree,
-  cycle detection, sibling position normalization) — these live in
-  `src/shared/bookmarks.ts` so both processes and tests can import them.
-- Live verification via the existing Playwright driver recipe: create via IPC,
-  assert `getAll` shape, check sidebar DOM rows, open → tab navigates,
-  delete folder → subtree gone from DB.
+- `tests/shared/` unit tests for the pure helpers in `src/shared/bookmarks.ts`
+  (flat list → tree, cycle detection) and for `decideTabMaintenance`
+  (ephemeral tabs sleep but never archive).
+- Live verification via the run-puerta recipe: create via IPC, click →
+  ephemeral associated tab opens and activates, row renders in the sidebar,
+  closeTab returns the row to idle, folder delete destroys the subtree and
+  its live tabs.
+
+Known behavior change rider: pinned-tab associated tabs also become
+sleep-eligible (same ephemeral rule). Intentional — same RAM argument — and
+called out in the PR.
 
 ## Migration note
 

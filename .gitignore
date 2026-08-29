@@ -9,3 +9,8 @@ out
 yalc.lock
 test.sh
 .superpowers/
+# Skill-local runtime artifacts (.claude/skills/<name>/ helper dirs)
+.claude/skills/*/node_modules/
+.claude/skills/*/.data/
+.claude/skills/*/shots/
+.claude/skills/*/bun.lock
