@@ -181,5 +181,5 @@ rl.on("close", async () => {
   process.exit(0);
 });
 
-console.log("puerta driver — \"help\" for commands, \"launch\" to start");
+console.log('puerta driver — "help" for commands, "launch" to start');
 rl.prompt();

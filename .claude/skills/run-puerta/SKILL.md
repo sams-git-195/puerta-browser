@@ -44,17 +44,17 @@ verbatim from `driver.mjs` — they encode all the gotchas below.
 
 ### Commands
 
-| command | what it does |
-|---|---|
-| `launch` | seed isolated data dir (first time), launch, wait for main UI |
-| `reset-data` | re-seed `.data/` fresh from `~/.config/Puerta` (quit first) |
-| `windows` | list all pages/webContents URLs |
-| `eval <js>` | evaluate in the main browser-UI renderer (`flow.*` API lives here) |
-| `evalin <url-substr> <js>` | evaluate in the page whose URL matches |
-| `data` | `flow.tabs.getData()` — ground truth for tab/group assertions |
-| `ss-page <url-substr> [name]` | screenshot ONE webContents → `shots/` |
-| `key <url-substr> <keyCode>` | send a key through the real input pipeline (e.g. `key example.com Escape`) |
-| `quit` | close app, exit |
+| command                       | what it does                                                               |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| `launch`                      | seed isolated data dir (first time), launch, wait for main UI              |
+| `reset-data`                  | re-seed `.data/` fresh from `~/.config/Puerta` (quit first)                |
+| `windows`                     | list all pages/webContents URLs                                            |
+| `eval <js>`                   | evaluate in the main browser-UI renderer (`flow.*` API lives here)         |
+| `evalin <url-substr> <js>`    | evaluate in the page whose URL matches                                     |
+| `data`                        | `flow.tabs.getData()` — ground truth for tab/group assertions              |
+| `ss-page <url-substr> [name]` | screenshot ONE webContents → `shots/`                                      |
+| `key <url-substr> <keyCode>`  | send a key through the real input pipeline (e.g. `key example.com Escape`) |
+| `quit`                        | close app, exit                                                            |
 
 Useful `eval` one-liners: `flow.tabs.newTab("https://example.com", true)`,
 `flow.settings.setSetting("toolbarPosition", "top")`,
@@ -74,7 +74,7 @@ bun dev   # real profile, real window — not for automation
   **`--no-sandbox --no-zygote` together** is the working combination.
 - **Pass the repo root as the app arg and set `cwd` to it** — Drizzle
   migrations resolve relative paths; launching `out/main/index.js` directly
-  fails with "Can't find meta/_journal.json".
+  fails with "Can't find meta/\_journal.json".
 - **Data isolation via `XDG_CONFIG_HOME`** (Electron derives userData from
   it on Linux). When seeding a copy of the profile, copy `flow.db-wal` and
   `flow.db-shm` too — the WAL holds recent rows; without it tabs are missing.
