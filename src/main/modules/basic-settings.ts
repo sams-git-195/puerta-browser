@@ -185,7 +185,9 @@ export const BasicSettings: BasicSetting[] = [
     name: "Sleep Tab After",
     showName: false,
     type: "enum",
-    defaultValue: "never",
+    // Default to sleeping background tabs after an hour — saves ~20-50MB per
+    // tab and they reload transparently on focus. "never" opts out.
+    defaultValue: "1h",
     options: [
       {
         id: "5m",

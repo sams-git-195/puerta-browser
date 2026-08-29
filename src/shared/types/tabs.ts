@@ -76,14 +76,14 @@ export type TabData = Omit<PersistedTabData, "navHistory" | "navHistoryIndex"> &
 
 /**
  * Tab group data sent to the renderer process.
- * Uses runtime tab IDs (webContents.id) for renderer consumption.
+ * Uses stable counter-based runtime tab IDs (TabData.id) for renderer consumption.
  */
 export type TabGroupData = {
   id: string; // string ID (e.g., "tg-0" for real groups, "s-{uniqueId}" for synthetic)
   mode: TabGroupMode;
   profileId: string;
   spaceId: string;
-  tabIds: number[]; // runtime webContents IDs
+  tabIds: number[]; // stable counter-based tab IDs (same scale as TabData.id, NOT webContents.id)
   glanceFrontTabId?: number;
   position: number;
 };
