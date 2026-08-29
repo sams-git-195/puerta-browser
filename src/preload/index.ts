@@ -267,6 +267,14 @@ const tabsAPI: FlowTabsAPI = {
     return ipcRenderer.send("tabs:show-context-menu", tabId);
   },
 
+  glancePromote: async (groupId: string) => {
+    return ipcRenderer.invoke("tabs:glance-promote", groupId);
+  },
+
+  glanceDismiss: async (groupId: string) => {
+    return ipcRenderer.invoke("tabs:glance-dismiss", groupId);
+  },
+
   splitTabs: async (tabIds: number[]) => {
     return ipcRenderer.invoke("tabs:split-tabs", tabIds);
   },

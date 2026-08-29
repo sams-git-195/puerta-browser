@@ -59,7 +59,9 @@ export const zIndexes = {
 
   // Tab Content
   tabTargetUrlIndicator: 11,
+  glanceControls: 10.5,
   tab: 10,
+  glanceScrim: 9.5,
   tabBack: 9,
 
   // Browser UI
@@ -81,7 +83,9 @@ export const focusPriorities = {
 
   // Tab Content
   tabTargetUrlIndicator: 0,
+  glanceControls: 0,
   tab: 10,
+  glanceScrim: 0,
   tabBack: 9,
 
   // Browser UI

@@ -9,7 +9,6 @@ type Flags = {
   DEBUG_DISABLE_TAB_VIEW: boolean;
   DEBUG_HOT_RELOAD_FRONTEND: boolean;
   SHOW_DEBUG_DEVTOOLS: boolean;
-  GLANCE_ENABLED: boolean;
   FAVICONS_REMOVE_PATH: boolean;
   INCOGNITO_ENABLED: boolean;
 };
@@ -32,9 +31,6 @@ export const FLAGS: Flags = {
 
   // Debug: Enable the hot reload feature for frontend (Experimental / Unstable)
   DEBUG_HOT_RELOAD_FRONTEND: true,
-
-  // Glance: Enable the glance feature
-  GLANCE_ENABLED: false,
 
   // Favicons: Remove the path from the favicon URL
   FAVICONS_REMOVE_PATH: true,

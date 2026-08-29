@@ -67,6 +67,20 @@ export interface FlowTabsAPI {
   showContextMenu: (tabId: number) => void;
 
   /**
+   * Promote a glance popup to a normal tab (the group dissolves,
+   * both tabs remain open, the popup tab becomes active)
+   * @param groupId The id of the glance tab group
+   */
+  glancePromote: (groupId: string) => Promise<boolean>;
+
+  /**
+   * Dismiss a glance popup (the popup tab closes, the source tab
+   * is re-activated)
+   * @param groupId The id of the glance tab group
+   */
+  glanceDismiss: (groupId: string) => Promise<boolean>;
+
+  /**
    * Put 2-4 ungrouped tabs (same space) side by side in a split view
    * @param tabIds The ids of the tabs, in left-to-right order
    */

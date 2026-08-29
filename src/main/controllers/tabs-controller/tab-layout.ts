@@ -2,6 +2,7 @@ import { Tab } from "./tab";
 import { TabBoundsController, isRectangleEqual } from "./bounds";
 import { TabLifecycleManager } from "./tab-lifecycle";
 import { getCurrentTimestamp } from "@/modules/utils";
+import { calculateGlanceBounds } from "~/glance";
 import { calculateSplitBounds } from "~/split";
 import { TabGroupMode } from "~/types/tabs";
 import { type LayerType } from "~/layers";
@@ -159,8 +160,8 @@ export class TabLayoutManager {
       newBounds = pageBounds;
     } else if (tabGroup.mode === "glance") {
       newTabGroupMode = "glance";
-      const isFront = tabGroup.frontTabId === tab.id;
-      newBounds = this.calculateGlanceBounds(pageBounds, isFront);
+      const isFront = tabGroup.getFrontTab()?.id === tab.id;
+      newBounds = calculateGlanceBounds(pageBounds, isFront);
 
       layerType = isFront ? "tab" : "tabBack";
     } else if (tabGroup.mode === "split") {
@@ -189,27 +190,5 @@ export class TabLayoutManager {
         boundsController.setBounds(newBounds);
       }
     }
-  }
-
-  /**
-   * Calculates bounds for a tab in glance mode.
-   * Front tab is slightly smaller; back tab is larger but behind.
-   */
-  private calculateGlanceBounds(pageBounds: Rectangle, isFront: boolean): Rectangle {
-    const widthPercentage = isFront ? 0.85 : 0.95;
-    const heightPercentage = isFront ? 1 : 0.975;
-
-    const newWidth = Math.floor(pageBounds.width * widthPercentage);
-    const newHeight = Math.floor(pageBounds.height * heightPercentage);
-
-    const xOffset = Math.floor((pageBounds.width - newWidth) / 2);
-    const yOffset = Math.floor((pageBounds.height - newHeight) / 2);
-
-    return {
-      x: pageBounds.x + xOffset,
-      y: pageBounds.y + yOffset,
-      width: newWidth,
-      height: newHeight
-    };
   }
 }

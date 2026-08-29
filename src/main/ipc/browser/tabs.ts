@@ -303,6 +303,34 @@ ipcMain.handle("tabs:close-tab", async (event, tabId: number) => {
   return true;
 });
 
+/** Looks up a live glance group by its groupId. */
+function getGlanceGroupById(groupId: string) {
+  const group = [...tabsController.tabGroups.values()].find((candidate) => candidate.groupId === groupId);
+  if (!group || group.isDestroyed || group.mode !== "glance") return null;
+  return group;
+}
+
+ipcMain.handle("tabs:glance-promote", async (_event, groupId: string) => {
+  const group = getGlanceGroupById(groupId);
+  if (!group) return false;
+
+  group.promote();
+  return true;
+});
+
+ipcMain.handle("tabs:glance-dismiss", async (_event, groupId: string) => {
+  const group = getGlanceGroupById(groupId);
+  if (!group) return false;
+
+  try {
+    group.dismiss();
+  } catch (error) {
+    console.error("glance dismiss failed:", error);
+    return false;
+  }
+  return true;
+});
+
 // --- Split view ---
 
 const MAX_SPLIT_GROUP_TABS = 4;
