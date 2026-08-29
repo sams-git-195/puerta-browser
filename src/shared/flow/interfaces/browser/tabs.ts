@@ -67,6 +67,18 @@ export interface FlowTabsAPI {
   showContextMenu: (tabId: number) => void;
 
   /**
+   * Put 2-4 ungrouped tabs (same space) side by side in a split view
+   * @param tabIds The ids of the tabs, in left-to-right order
+   */
+  splitTabs: (tabIds: number[]) => Promise<boolean>;
+
+  /**
+   * Dissolve a split view group; all tabs remain open as normal tabs
+   * @param groupId The id of the split tab group
+   */
+  unsplit: (groupId: string) => Promise<boolean>;
+
+  /**
    * Disable Picture in Picture mode for a tab
    * @param goBackToTab Whether to go back to the tab after Picture in Picture mode is disabled
    */

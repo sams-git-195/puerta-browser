@@ -514,9 +514,12 @@ class TabsController extends TypedEventEmitter<TabsControllerEvents> {
     // Set the webContents reference so the createWindow callback can return it
     sourceTab._lastCreatedWebContents = newTab.webContents;
 
-    // Handle Glance tab groups if enabled
-    if (FLAGS.GLANCE_ENABLED && disposition === "foreground-tab") {
-      const existingGroup = this.getTabGroupByTabId(sourceTab.id);
+    // Handle Glance tab groups if enabled. Tabs opened from a split pane
+    // never become glances — creating a glance group would rip the source
+    // tab out of its split.
+    const sourceGroup = this.getTabGroupByTabId(sourceTab.id);
+    if (FLAGS.GLANCE_ENABLED && disposition === "foreground-tab" && sourceGroup?.mode !== "split") {
+      const existingGroup = sourceGroup;
       if (existingGroup && existingGroup.mode === "glance") {
         // Add the new tab to the existing glance group
         existingGroup.addTab(newTab.id);

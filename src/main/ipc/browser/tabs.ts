@@ -303,6 +303,47 @@ ipcMain.handle("tabs:close-tab", async (event, tabId: number) => {
   return true;
 });
 
+// --- Split view ---
+
+const MAX_SPLIT_GROUP_TABS = 4;
+
+ipcMain.handle("tabs:split-tabs", async (_event, tabIds: number[]) => {
+  if (!Array.isArray(tabIds) || tabIds.length < 2 || tabIds.length > MAX_SPLIT_GROUP_TABS) return false;
+
+  const tabs: Tab[] = [];
+  for (const tabId of tabIds) {
+    const tab = tabsController.getTabById(tabId);
+    if (!tab || tab.isDestroyed) return false;
+    // Only ungrouped tabs can form a split — pulling tabs out of glance or
+    // other splits implicitly would be surprising.
+    if (tabsController.getTabGroupByTabId(tabId)) return false;
+    tabs.push(tab);
+  }
+  // All members must live in the same space (tab groups force one space)
+  if (new Set(tabs.map((t) => t.spaceId)).size !== 1) return false;
+
+  try {
+    const group = tabsController.createTabGroup("split", tabIds as [number, ...number[]]);
+    tabsController.activateTab(group);
+  } catch (error) {
+    console.error("split-tabs failed:", error);
+    return false;
+  }
+  return true;
+});
+
+ipcMain.handle("tabs:unsplit", async (_event, groupId: string) => {
+  const group = [...tabsController.tabGroups.values()].find((candidate) => candidate.groupId === groupId);
+  if (!group || group.isDestroyed || group.mode !== "split") return false;
+
+  const firstTab = group.tabs[0] ?? null;
+  group.destroy();
+  if (firstTab && !firstTab.isDestroyed) {
+    tabsController.activateTab(firstTab);
+  }
+  return true;
+});
+
 ipcMain.handle("tabs:disable-picture-in-picture", async (event, goBackToTab: boolean) => {
   const sender = event.sender;
   const tab = tabsController.getTabByWebContents(sender);
@@ -436,6 +477,66 @@ ipcMain.on("tabs:show-context-menu", (event, tabId: number) => {
       }
     })
   );
+
+  // --- Split view ---
+  const MAX_SPLIT_TABS = 4;
+  const clickedGroup = tabsController.getTabGroupByTabId(tab.id);
+  const activeInSpace = tabsController.getActiveTab(window.id, tab.spaceId);
+
+  if (clickedGroup?.mode === "split") {
+    contextMenu.append(
+      new MenuItem({
+        label: "Remove From Split",
+        click: () => {
+          if (clickedGroup.isDestroyed) return;
+          clickedGroup.removeTab(tab.id);
+          tabsController.activateTab(tab);
+        }
+      })
+    );
+    contextMenu.append(
+      new MenuItem({
+        label: "Close Split",
+        click: () => {
+          // Dissolve the group; every pane lives on as a normal tab
+          if (clickedGroup.isDestroyed) return;
+          clickedGroup.destroy();
+          tabsController.activateTab(tab);
+        }
+      })
+    );
+    contextMenu.append(new MenuItem({ type: "separator" }));
+  } else if (!clickedGroup) {
+    if (activeInSpace instanceof Tab && activeInSpace.id !== tab.id) {
+      contextMenu.append(
+        new MenuItem({
+          label: "Open in Split View",
+          click: () => {
+            if (tab.isDestroyed || activeInSpace.isDestroyed) return;
+            const group = tabsController.createTabGroup("split", [activeInSpace.id, tab.id]);
+            tabsController.activateTab(group);
+          }
+        })
+      );
+      contextMenu.append(new MenuItem({ type: "separator" }));
+    } else if (
+      activeInSpace instanceof BaseTabGroup &&
+      activeInSpace.mode === "split" &&
+      activeInSpace.tabs.length < MAX_SPLIT_TABS
+    ) {
+      contextMenu.append(
+        new MenuItem({
+          label: "Add to Split View",
+          click: () => {
+            if (tab.isDestroyed || activeInSpace.isDestroyed) return;
+            activeInSpace.addTab(tab.id);
+            tabsController.activateTab(activeInSpace);
+          }
+        })
+      );
+      contextMenu.append(new MenuItem({ type: "separator" }));
+    }
+  }
 
   contextMenu.append(
     new MenuItem({
