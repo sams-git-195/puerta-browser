@@ -9,6 +9,7 @@ import "@/ipc/app/window-controls";
 import "@/ipc/browser/browser";
 import "@/ipc/browser/tabs";
 import "@/ipc/browser/pinned-tabs";
+import "@/ipc/browser/bookmarks";
 import "@/ipc/browser/page";
 import "@/ipc/browser/navigation";
 import "@/ipc/browser/history";

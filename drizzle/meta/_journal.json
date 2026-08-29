@@ -29,6 +29,13 @@
       "when": 1774447068044,
       "tag": "0003_remove_recently_closed",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1788017545275,
+      "tag": "0004_gigantic_scalphunter",
+      "breakpoints": true
     }
   ]
 }

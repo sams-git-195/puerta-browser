@@ -6,6 +6,7 @@ import { simplifyUrl } from "@/lib/url";
 import { PinnedBrowserActions } from "./pinned-browser-actions";
 import { useBrowserSidebar } from "@/components/browser-ui/browser-sidebar/provider";
 import { BrowserActionList } from "@/components/browser-ui/browser-sidebar/_components/browser-action-list";
+import { BookmarkStar } from "@/components/browser-ui/browser-sidebar/_components/bookmarks/bookmark-star";
 // import { SiteControls } from "@/components/browser-ui/browser-sidebar/_components/site-controls";
 
 export const AddressBar = memo(function AddressBar() {
@@ -70,6 +71,7 @@ export const AddressBar = memo(function AddressBar() {
         {isPlaceholder ? "Search or Enter URL..." : simplifiedUrl}
       </p>
       <div className="ml-auto flex items-center gap-0.5 shrink-0">
+        <BookmarkStar />
         <PinnedBrowserActions />
         <div>
           <BrowserActionList />

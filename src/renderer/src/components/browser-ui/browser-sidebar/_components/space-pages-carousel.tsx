@@ -11,6 +11,7 @@ import { AnimatePresence } from "motion/react";
 import type { Space } from "~/flow/interfaces/sessions/spaces";
 import { cn, hex_is_light } from "@/lib/utils";
 import { PinGrid } from "@/components/browser-ui/browser-sidebar/_components/pin-grid/normal/pin-grid";
+import { BookmarksSection } from "@/components/browser-ui/browser-sidebar/_components/bookmarks/bookmarks-section";
 import { useBrowserSidebar } from "@/components/browser-ui/browser-sidebar/provider";
 
 // --- SpaceContentPage --- //
@@ -49,6 +50,9 @@ const SpaceContentPage = memo(function SpaceContentPage({
       )}
     >
       {!slotMachineEnabled && shouldShowPinnedTabs && <PinGrid profileId={space.profileId} />}
+      {!slotMachineEnabled && shouldShowPinnedTabs && (
+        <BookmarksSection profileId={space.profileId} spaceId={space.id} />
+      )}
       <SpaceTitle space={space} />
       <SidebarScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-1 flex-1 min-h-full pt-1">

@@ -5,7 +5,9 @@ import { TabBoundsController } from "./bounds";
 import { TabLayoutManager } from "./tab-layout";
 import { TabLifecycleManager } from "./tab-lifecycle";
 import { windowTabsChanged, windowTabContentChanged } from "@/ipc/browser/tabs";
-import { shouldArchiveTab, shouldSleepTab, tabPersistenceManager } from "@/saving/tabs";
+import { getTabMaintenanceThresholds, tabPersistenceManager } from "@/saving/tabs";
+import { decideTabMaintenance } from "~/tab-maintenance";
+import { getCurrentTimestamp } from "@/modules/utils";
 import { serializeTab, serializeTabGroup } from "@/saving/tabs/serialization";
 import { recentlyClosedManager } from "./recently-closed-manager";
 import { GlanceTabGroup } from "./tab-groups/glance";
@@ -124,15 +126,16 @@ class TabsController extends TypedEventEmitter<TabsControllerEvents> {
       }
     });
 
-    // Archive/sleep check interval
+    // Archive/sleep check interval. Ephemeral tabs (bookmark/pinned-tab
+    // associations) sleep like any background tab but are never archived —
+    // archiving destroys the tab, and associations shouldn't vanish on a
+    // timer. Decision logic lives in ~/tab-maintenance (unit-tested).
     const interval = setInterval(() => {
       for (const tab of this.tabs.values()) {
-        if (tab.ephemeral) continue;
-        if (!tab.visible && shouldArchiveTab(tab.lastActiveAt)) {
+        const action = decideTabMaintenance(tab, getTabMaintenanceThresholds(), getCurrentTimestamp());
+        if (action === "archive") {
           tab.destroy();
-          continue;
-        }
-        if (!tab.visible && !tab.asleep && shouldSleepTab(tab.lastActiveAt)) {
+        } else if (action === "sleep") {
           const managers = this.getTabManagers(tab.id);
           managers?.lifecycle.putToSleep();
         }

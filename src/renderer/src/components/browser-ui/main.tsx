@@ -28,6 +28,7 @@ import { ExtensionsProviderWithSpaces } from "@/components/providers/extensions-
 import MinimalToastProvider from "@/components/providers/minimal-toast-provider";
 import { ActionsProvider } from "@/components/providers/actions-provider";
 import { PinnedTabsProvider } from "@/components/providers/pinned-tabs-provider";
+import { BookmarksProvider } from "@/components/providers/bookmarks-provider";
 import BrowserContent from "@/components/browser-ui/browser-content";
 import { TargetUrlIndicator } from "@/components/browser-ui/target-url-indicator";
 import { FindInPage } from "@/components/browser-ui/find-in-page";
@@ -341,16 +342,18 @@ export function BrowserUI({ type }: { type: BrowserUIType }) {
             <SpacesProvider windowType={type}>
               <TabsProvider>
                 <PinnedTabsProvider>
-                  <BrowserActionProvider>
-                    <ExtensionsProviderWithSpaces>
-                      <PasskeysRequestProvider>
-                        <ActivePromptsProvider>
-                          <TabDisabler />
-                          <InternalBrowserUI isReady={isReady} type={type} />
-                        </ActivePromptsProvider>
-                      </PasskeysRequestProvider>
-                    </ExtensionsProviderWithSpaces>
-                  </BrowserActionProvider>
+                  <BookmarksProvider>
+                    <BrowserActionProvider>
+                      <ExtensionsProviderWithSpaces>
+                        <PasskeysRequestProvider>
+                          <ActivePromptsProvider>
+                            <TabDisabler />
+                            <InternalBrowserUI isReady={isReady} type={type} />
+                          </ActivePromptsProvider>
+                        </PasskeysRequestProvider>
+                      </ExtensionsProviderWithSpaces>
+                    </BrowserActionProvider>
+                  </BookmarksProvider>
                 </PinnedTabsProvider>
               </TabsProvider>
             </SpacesProvider>

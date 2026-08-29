@@ -394,6 +394,19 @@ export const tabPersistenceManager = new TabPersistenceManager();
 // --- Settings-based helpers (re-exported for convenience) ---
 
 /**
+ * Current archive/sleep thresholds in seconds, from the user's settings.
+ * Unknown/never values map to Infinity.
+ */
+export function getTabMaintenanceThresholds(): { archiveAfterSeconds: number; sleepAfterSeconds: number } {
+  const archive = ArchiveTabValueMap[getSettingValueById("archiveTabAfter") as keyof typeof ArchiveTabValueMap];
+  const sleep = SleepTabValueMap[getSettingValueById("sleepTabAfter") as keyof typeof SleepTabValueMap];
+  return {
+    archiveAfterSeconds: typeof archive === "number" ? archive : Infinity,
+    sleepAfterSeconds: typeof sleep === "number" ? sleep : Infinity
+  };
+}
+
+/**
  * Determines if a tab should be archived based on its lastActiveAt timestamp
  * and the user's archive setting.
  */
