@@ -1,0 +1,8 @@
+{
+  "name": "run-puerta-driver",
+  "private": true,
+  "description": "Local-only deps for the run-puerta driver (not part of the app)",
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}
