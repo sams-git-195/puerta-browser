@@ -1,5 +1,5 @@
 import { cn, craftActiveFaviconURL } from "@/lib/utils";
-import { XIcon, Volume2, VolumeX } from "lucide-react";
+import { XIcon, Volume2, VolumeX, MoonIcon } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import type { TabGroup as TabGroupType } from "@/components/providers/tabs-provider";
@@ -190,8 +190,31 @@ const SidebarTab = memo(
             )}
           </AnimatePresence>
 
+          {/* Sleeping indicator */}
+          <AnimatePresence initial={false}>
+            {tab.asleep && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, width: 0 }}
+                animate={{ opacity: 1, scale: 1, width: "auto" }}
+                exit={{ opacity: 0, scale: 0.8, width: 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="flex items-center justify-center overflow-hidden shrink-0"
+                title="Tab is sleeping to save memory — click to wake"
+              >
+                <div className="size-5 flex items-center justify-center">
+                  <MoonIcon className="size-3.5 text-black/40 dark:text-white/40" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Title */}
-          <span className="ml-1 truncate min-w-0 flex-1 text-sm font-medium text-black/90 dark:text-white/90">
+          <span
+            className={cn(
+              "ml-1 truncate min-w-0 flex-1 text-sm font-medium",
+              tab.asleep ? "text-black/50 dark:text-white/50" : "text-black/90 dark:text-white/90"
+            )}
+          >
             {tab.title}
           </span>
         </div>
