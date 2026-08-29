@@ -5,6 +5,7 @@ import { usePlatform } from "@/components/main/platform";
 import { AddressBar } from "./_components/address-bar";
 import { useCallback, useMemo } from "react";
 import { useSpaces } from "@/components/providers/spaces-provider";
+import { useSettings } from "@/components/providers/settings-provider";
 import { cn } from "@/lib/utils";
 import { NavigationControls, NavButton } from "@/components/browser-ui/browser-sidebar/_components/navigation-controls";
 import { SlotMachineGuard } from "@/components/browser-ui/browser-sidebar/_components/pin-grid/slot-machine/guard";
@@ -40,8 +41,14 @@ function SidebarIcon({ className }: { className?: string }) {
 export function SidebarInner({ direction, variant }: { direction: AttachedDirection; variant: SidebarVariant }) {
   const { isAnimating, setVisible, mode, slotMachineEnabled, setSlotMachineEnabled } = useBrowserSidebar();
   const { platform } = usePlatform();
+  const { getSetting } = useSettings();
 
   const { isCurrentSpaceLight } = useSpaces();
+
+  // In "Along the Top" toolbar mode, navigation and the address bar render in
+  // the top toolbar (see HorizontalToolbar in main.tsx); the sidebar keeps
+  // only tabs, pins, and spaces.
+  const topToolbar = getSetting<string>("toolbarPosition") === "top";
 
   const handleSetSlotMachine = useCallback(
     (enabled: boolean) => {
@@ -66,11 +73,11 @@ export function SidebarInner({ direction, variant }: { direction: AttachedDirect
             onClick={() => setVisible(!mode.startsWith("attached"))}
           />
         </div>
-        <NavigationControls />
+        {!topToolbar && <NavigationControls />}
       </div>
       {/* Middle Section */}
       <div className="flex-1 min-h-0 gap-2 flex flex-col overflow-hidden">
-        <AddressBar />
+        {!topToolbar && <AddressBar />}
         <SlotMachineGuard passed={slotMachineEnabled} setPassed={handleSetSlotMachine} />
         {slotMachineEnabled && <SlotMachinePinGrid />}
         <SpacePagesCarousel />
