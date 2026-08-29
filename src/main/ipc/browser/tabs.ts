@@ -417,6 +417,19 @@ ipcMain.on("tabs:show-context-menu", (event, tabId: number) => {
 
   contextMenu.append(
     new MenuItem({
+      label: "Bookmark This Page",
+      enabled: hasURL,
+      click: async () => {
+        // Lazy import: a static one would close an init-order cycle
+        // (tabs-controller → ipc/tabs → ipc/bookmarks → tabs-controller)
+        const { bookmarkTabById } = await import("@/ipc/browser/bookmarks");
+        bookmarkTabById(tab.id);
+      }
+    })
+  );
+
+  contextMenu.append(
+    new MenuItem({
       type: "separator"
     })
   );

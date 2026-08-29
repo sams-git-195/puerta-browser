@@ -36,6 +36,8 @@ import { FlowWindowsAPI } from "~/flow/interfaces/app/windows";
 import { FlowExtensionsAPI } from "~/flow/interfaces/app/extensions";
 import { FlowTabsAPI } from "~/flow/interfaces/browser/tabs";
 import { FlowPinnedTabsAPI } from "~/flow/interfaces/browser/pinned-tabs";
+import { FlowBookmarksAPI } from "~/flow/interfaces/browser/bookmarks";
+import type { BookmarkData } from "~/types/bookmarks";
 import { FlowUpdatesAPI } from "~/flow/interfaces/app/updates";
 import { FlowActionsAPI } from "~/flow/interfaces/app/actions";
 import { FlowShortcutsAPI, ShortcutsData } from "~/flow/interfaces/app/shortcuts";
@@ -335,6 +337,43 @@ const pinnedTabsAPI: FlowPinnedTabsAPI = {
   },
   showContextMenu: (pinnedTabId: string) => {
     return ipcRenderer.send("pinned-tabs:show-context-menu", pinnedTabId);
+  }
+};
+
+// BOOKMARKS API //
+const bookmarksAPI: FlowBookmarksAPI = {
+  getData: async () => {
+    return ipcRenderer.invoke("bookmarks:get-data");
+  },
+  onChanged: (callback: (data: Record<string, BookmarkData[]>) => void) => {
+    return listenOnIPCChannel("bookmarks:on-changed", callback);
+  },
+  onRenameRequested: (callback: (bookmarkId: string) => void) => {
+    return listenOnIPCChannel("bookmarks:on-rename-requested", callback);
+  },
+  click: async (bookmarkId: string) => {
+    return ipcRenderer.invoke("bookmarks:click", bookmarkId);
+  },
+  createFromTab: async (tabId: number, parentId?: string | null) => {
+    return ipcRenderer.invoke("bookmarks:create-from-tab", tabId, parentId);
+  },
+  createFolder: async (profileId: string, title: string, parentId?: string | null) => {
+    return ipcRenderer.invoke("bookmarks:create-folder", profileId, title, parentId);
+  },
+  rename: async (bookmarkId: string, title: string) => {
+    return ipcRenderer.invoke("bookmarks:rename", bookmarkId, title);
+  },
+  move: async (bookmarkId: string, parentId: string | null, position: number) => {
+    return ipcRenderer.invoke("bookmarks:move", bookmarkId, parentId, position);
+  },
+  remove: async (bookmarkId: string) => {
+    return ipcRenderer.invoke("bookmarks:remove", bookmarkId);
+  },
+  closeTab: async (bookmarkId: string) => {
+    return ipcRenderer.invoke("bookmarks:close-tab", bookmarkId);
+  },
+  showContextMenu: (bookmarkId: string) => {
+    return ipcRenderer.send("bookmarks:show-context-menu", bookmarkId);
   }
 };
 
@@ -806,6 +845,7 @@ const flowAPI: typeof flow = {
     disablePictureInPicture: "all"
   }),
   pinnedTabs: wrapAPI(pinnedTabsAPI, "browser"),
+  bookmarks: wrapAPI(bookmarksAPI, "browser"),
   page: wrapAPI(pageAPI, "browser"),
   navigation: wrapAPI(navigationAPI, "browser"),
   history: wrapAPI(historyAPI, "browser"),

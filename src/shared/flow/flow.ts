@@ -5,6 +5,7 @@ import { FlowExtensionsAPI } from "~/flow/interfaces/app/extensions";
 import { FlowBrowserAPI } from "~/flow/interfaces/browser/browser";
 import { FlowTabsAPI } from "~/flow/interfaces/browser/tabs";
 import { FlowPinnedTabsAPI } from "~/flow/interfaces/browser/pinned-tabs";
+import { FlowBookmarksAPI } from "~/flow/interfaces/browser/bookmarks";
 import { FlowPageAPI } from "~/flow/interfaces/browser/page";
 import { FlowNavigationAPI } from "~/flow/interfaces/browser/navigation";
 import { FlowInterfaceAPI } from "~/flow/interfaces/browser/interface";
@@ -44,6 +45,7 @@ declare global {
     browser: FlowBrowserAPI;
     tabs: FlowTabsAPI;
     pinnedTabs: FlowPinnedTabsAPI;
+    bookmarks: FlowBookmarksAPI;
     page: FlowPageAPI;
     navigation: FlowNavigationAPI;
     history: FlowHistoryAPI;

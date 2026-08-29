@@ -1,5 +1,6 @@
-import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, uniqueIndex, type AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { NavigationEntry, TabGroupMode } from "~/types/tabs";
+import { BookmarkKind } from "~/types/bookmarks";
 
 // --- Tabs Table ---
 
@@ -72,6 +73,33 @@ export const pinnedTabs = sqliteTable(
 
 export type PinnedTabRow = typeof pinnedTabs.$inferSelect;
 export type PinnedTabInsert = typeof pinnedTabs.$inferInsert;
+
+// --- Bookmarks Table ---
+// One row per node: folders and bookmarks share the shape, discriminated by
+// `kind`. The self-referencing FK cascades so deleting a folder removes its
+// whole subtree in one statement (requires foreign_keys=ON — set in index.ts).
+
+export const bookmarks = sqliteTable(
+  "bookmarks",
+  {
+    uniqueId: text("unique_id").primaryKey(),
+    profileId: text("profile_id").notNull(),
+    parentId: text("parent_id").references((): AnySQLiteColumn => bookmarks.uniqueId, { onDelete: "cascade" }),
+    kind: text("kind").$type<BookmarkKind>().notNull(),
+    title: text("title").notNull(),
+    url: text("url"),
+    faviconUrl: text("favicon_url"),
+    position: integer("position").notNull(),
+    createdAt: integer("created_at").notNull()
+  },
+  (table) => [
+    index("idx_bookmarks_profile_id").on(table.profileId),
+    index("idx_bookmarks_parent_id").on(table.parentId)
+  ]
+);
+
+export type BookmarkRow = typeof bookmarks.$inferSelect;
+export type BookmarkInsert = typeof bookmarks.$inferInsert;
 
 // --- Browsing history (Chromium-inspired urls + visits; see design/chromium-inspired-browsing-history.md) ---
 

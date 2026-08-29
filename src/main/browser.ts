@@ -17,6 +17,7 @@ import { initCursorEdgeMonitor } from "@/controllers/windows-controller/utils/cu
 import { cleanupStaleEphemeralProfiles } from "@/controllers/profiles-controller/ephemeral";
 import { initTabSync } from "@/controllers/tabs-controller/tab-sync";
 import { pinnedTabsController } from "@/controllers/pinned-tabs-controller";
+import { bookmarksController } from "@/controllers/bookmarks-controller";
 import { setupBasicAuthHandler } from "@/app/basic-auth";
 
 async function bootstrapBrowser() {
@@ -27,8 +28,9 @@ async function bootstrapBrowser() {
   // Start tab persistence flush interval (writes dirty tabs to disk every ~2s)
   tabPersistenceManager.start();
 
-  // Load pinned tabs from database into memory (synchronous — better-sqlite3)
+  // Load pinned tabs and bookmarks from database into memory (synchronous — better-sqlite3)
   pinnedTabsController.loadAll();
+  bookmarksController.loadAll();
 
   // Start cursor edge monitor (detects pointer near window edges for floating sidebar)
   initCursorEdgeMonitor();
