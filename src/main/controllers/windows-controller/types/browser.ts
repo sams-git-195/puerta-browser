@@ -217,18 +217,29 @@ export class BrowserWindow extends BaseWindow<BrowserWindowEvents> {
     function onSpaceChanged() {
       const spaceId = window.currentSpaceId;
       if (!spaceId) return;
-      spacesController.get(spaceId).then((space) => {
-        if (!space) return;
 
-        // win32 and linux only
-        if (process.platform === "darwin") return;
+      // setTitleBarOverlay only works where the overlay was actually enabled
+      // at construction: that requires titleBarStyle "hidden", which is set on
+      // darwin/win32 only — and darwin is excluded from the overlay entirely
+      // (Electron issue 49183). On linux the window is frameless with no
+      // overlay, so calling it throws "Titlebar overlay is not enabled" as an
+      // unhandled rejection on every space change.
+      if (process.platform !== "win32") return;
 
-        browserWindow.setTitleBarOverlay({
-          height: 30,
-          symbolColor: hex_is_light(space.bgStartColor || "#ffffff") ? "black" : "white",
-          color: "rgba(0,0,0,0)"
+      spacesController
+        .get(spaceId)
+        .then((space) => {
+          if (!space) return;
+
+          browserWindow.setTitleBarOverlay({
+            height: 30,
+            symbolColor: hex_is_light(space.bgStartColor || "#ffffff") ? "black" : "white",
+            color: "rgba(0,0,0,0)"
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to update titlebar overlay:", error);
         });
-      });
     }
     onSpaceChanged();
     this.on("current-space-changed", onSpaceChanged);
