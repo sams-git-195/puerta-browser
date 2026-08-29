@@ -518,7 +518,11 @@ class TabsController extends TypedEventEmitter<TabsControllerEvents> {
     // never become glances — creating a glance group would rip the source
     // tab out of its split.
     const sourceGroup = this.getTabGroupByTabId(sourceTab.id);
-    if (getSettingValueById("glanceEnabled") === true && disposition === "foreground-tab" && sourceGroup?.mode !== "split") {
+    if (
+      getSettingValueById("glanceEnabled") === true &&
+      disposition === "foreground-tab" &&
+      sourceGroup?.mode !== "split"
+    ) {
       const existingGroup = sourceGroup;
       if (existingGroup && existingGroup.mode === "glance") {
         // Add the new tab to the existing glance group
