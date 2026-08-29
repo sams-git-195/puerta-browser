@@ -112,13 +112,16 @@ const electronBuilderConfig: Configuration = {
     icon: "./build/volume-icon.icns"
   },
   linux: {
-    target: ["AppImage", "deb"],
+    target: ["AppImage", "deb", "rpm"],
     executableName: "puerta",
     category: "Network;WebBrowser;",
     executableArgs: ["--ozone-platform-hint=auto"],
     icon: "icon.png"
   },
   appImage: {
+    artifactName: "${name}-${version}-${arch}.${ext}"
+  },
+  rpm: {
     artifactName: "${name}-${version}-${arch}.${ext}"
   },
   npmRebuild: false,
