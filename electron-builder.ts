@@ -113,6 +113,7 @@ const electronBuilderConfig: Configuration = {
   },
   linux: {
     target: ["AppImage", "deb"],
+    executableName: "puerta",
     category: "Network;WebBrowser;",
     executableArgs: ["--ozone-platform-hint=auto"],
     icon: "icon.png"

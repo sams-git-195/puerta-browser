@@ -20,7 +20,7 @@ class DefaultBrowserController {
 
     return new Promise((resolve) => {
       if (process.platform === "linux" || process.platform.includes("bsd")) {
-        exec("xdg-settings set default-web-browser puerta-browser.desktop", (err) => {
+        exec("xdg-settings set default-web-browser puerta.desktop", (err) => {
           if (err?.message) {
             resolve(false);
           } else {
