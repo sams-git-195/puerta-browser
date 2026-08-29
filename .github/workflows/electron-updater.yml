@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   upgrade-electron-current-major:
-    if: github.repository == 'MultiboxLabs/flow-browser'
+    if: github.repository == 'sams-git-195/puerta-browser'
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
@@ -77,7 +77,7 @@ jobs:
             electron
 
   upgrade-electron-next-major:
-    if: github.repository == 'MultiboxLabs/flow-browser'
+    if: github.repository == 'sams-git-195/puerta-browser'
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
