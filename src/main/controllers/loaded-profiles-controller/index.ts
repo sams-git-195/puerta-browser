@@ -155,6 +155,14 @@ class LoadedProfilesController extends TypedEventEmitter<LoadedProfilesControlle
         const tab = tabsController.getTabByWebContents(tabWebContents);
         if (!tab) return;
 
+        // This callback is invoked not only for genuine extension requests
+        // (chrome.tabs.update({active:true})) but also as an echo of our own
+        // extensions.selectTab() calls during layout. If the tab is already
+        // part of the active element, re-activating it as a bare tab would
+        // rip apart an active tab group (glance/split) and the group's
+        // self-healing re-activation then loops with this echo forever.
+        if (tabsController.isTabActive(tab)) return;
+
         // Set the space for the window
         const window = tab.getWindow();
         setWindowSpace(window, tab.spaceId);

@@ -3,6 +3,7 @@ import { TabBoundsController, isRectangleEqual } from "./bounds";
 import { TabLifecycleManager } from "./tab-lifecycle";
 import { getCurrentTimestamp } from "@/modules/utils";
 import { calculateGlanceBounds } from "~/glance";
+import { calculateSplitBounds } from "~/split";
 import { TabGroupMode } from "~/types/tabs";
 import { type LayerType } from "~/layers";
 import { Rectangle } from "electron";
@@ -165,7 +166,8 @@ export class TabLayoutManager {
       layerType = isFront ? "tab" : "tabBack";
     } else if (tabGroup.mode === "split") {
       newTabGroupMode = "split";
-      // TODO: Implement split tab group layout
+      const index = tabGroup.indexOfTab(tab.id);
+      newBounds = calculateSplitBounds(pageBounds, index, tabGroup.tabCount);
     }
 
     // Update z-index via setWindow

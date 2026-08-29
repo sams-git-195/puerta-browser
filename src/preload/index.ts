@@ -277,6 +277,14 @@ const tabsAPI: FlowTabsAPI = {
     return ipcRenderer.invoke("tabs:glance-dismiss", groupId);
   },
 
+  splitTabs: async (tabIds: number[]) => {
+    return ipcRenderer.invoke("tabs:split-tabs", tabIds);
+  },
+
+  unsplit: async (groupId: string) => {
+    return ipcRenderer.invoke("tabs:unsplit", groupId);
+  },
+
   moveTab: async (tabId: number, newPosition: number) => {
     return ipcRenderer.invoke("tabs:move-tab", tabId, newPosition);
   },
