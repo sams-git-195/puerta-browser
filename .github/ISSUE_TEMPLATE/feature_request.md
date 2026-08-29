@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for Puerta Browser
 title: "[FEATURE] "
 labels: enhancement
 type: feature
