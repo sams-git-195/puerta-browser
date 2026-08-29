@@ -43,8 +43,11 @@ class WindowComponent {
     this.layer.setVisible(visible);
   }
 
+  // During window teardown the view's webContents can already be gone
+  // (destroy-order race), so both accessors must tolerate its absence.
   public focus() {
-    if (!this.view.webContents.isDestroyed()) {
+    const webContents = this.view.webContents;
+    if (webContents && !webContents.isDestroyed()) {
       this.layer.focus();
     }
   }
@@ -55,7 +58,8 @@ class WindowComponent {
     }
 
     this.destroyed = true;
-    if (!this.view.webContents.isDestroyed()) {
+    const webContents = this.view.webContents;
+    if (webContents && !webContents.isDestroyed()) {
       this.layer.setVisible(false);
     }
     this.browserWindow.layerManager.pop(this.layer);

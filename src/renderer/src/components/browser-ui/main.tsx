@@ -31,6 +31,7 @@ import { PinnedTabsProvider } from "@/components/providers/pinned-tabs-provider"
 import BrowserContent from "@/components/browser-ui/browser-content";
 import { TargetUrlIndicator } from "@/components/browser-ui/target-url-indicator";
 import { FindInPage } from "@/components/browser-ui/find-in-page";
+import { GlanceControls } from "@/components/browser-ui/glance-controls";
 import { PasskeyConditionalUI } from "@/components/browser-ui/passkey-conditional-ui";
 import { WebPrompts } from "@/components/browser-ui/web-prompts";
 import { PasskeysRequestProvider } from "@/components/providers/passkeys-request-provider";
@@ -288,6 +289,7 @@ function InternalBrowserUI({ isReady, type }: { isReady: boolean; type: BrowserU
                         <WebPrompts anchorRef={browserContentAnchorRef} />
                         <PasskeyConditionalUI anchorRef={browserContentAnchorRef} />
                         <FindInPage anchorRef={browserContentAnchorRef} />
+                        <GlanceControls anchorRef={browserContentAnchorRef} />
                         <BrowserContent />
                         <TargetUrlIndicator anchorRef={browserContentAnchorRef} />
                       </div>

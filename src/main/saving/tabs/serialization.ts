@@ -158,8 +158,9 @@ export function serializeTabGroup(tabGroup: TabGroup): PersistedTabGroupData {
     profileId: tabGroup.profileId,
     spaceId: tabGroup.spaceId,
     tabUniqueIds: tabGroup.tabs.map((tab) => tab.uniqueId),
-    glanceFrontTabUniqueId:
-      tabGroup.mode === "glance" ? tabGroup.tabs.find((t) => t.id === tabGroup.frontTabId)?.uniqueId : undefined,
+    // Use getFrontTab() (not raw frontTabId) so a stale front reference
+    // heals itself on the next save instead of persisting as unresolvable.
+    glanceFrontTabUniqueId: tabGroup.mode === "glance" ? tabGroup.getFrontTab()?.uniqueId : undefined,
     position: tabGroup.position
   };
 }
@@ -175,7 +176,7 @@ export function serializeTabGroupForRenderer(tabGroup: TabGroup): TabGroupData {
     profileId: tabGroup.profileId,
     spaceId: tabGroup.spaceId,
     tabIds: tabGroup.tabs.map((tab) => tab.id),
-    glanceFrontTabId: tabGroup.mode === "glance" ? tabGroup.frontTabId : undefined,
+    glanceFrontTabId: tabGroup.mode === "glance" ? tabGroup.getFrontTab()?.id : undefined,
     position: tabGroup.position
   };
 }

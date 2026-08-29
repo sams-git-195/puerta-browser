@@ -16,7 +16,7 @@ import { loadedProfilesController } from "@/controllers/loaded-profiles-controll
 import { setWindowSpace } from "@/ipc/session/spaces";
 import { WebContents } from "electron";
 import { TabGroupMode } from "~/types/tabs";
-import { FLAGS } from "@/modules/flags";
+import { getSettingValueById } from "@/saving/settings";
 import { quitController } from "@/controllers/quit-controller";
 import { clearPlaceholdersForTab, isSyncExcludedTab, isTabSyncEnabled, registerTabsController } from "./tab-sync";
 
@@ -515,7 +515,7 @@ class TabsController extends TypedEventEmitter<TabsControllerEvents> {
     sourceTab._lastCreatedWebContents = newTab.webContents;
 
     // Handle Glance tab groups if enabled
-    if (FLAGS.GLANCE_ENABLED && disposition === "foreground-tab") {
+    if (getSettingValueById("glanceEnabled") === true && disposition === "foreground-tab") {
       const existingGroup = this.getTabGroupByTabId(sourceTab.id);
       if (existingGroup && existingGroup.mode === "glance") {
         // Add the new tab to the existing glance group
