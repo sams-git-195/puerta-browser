@@ -123,7 +123,7 @@ export function NewTabPage() {
           <div className="flex items-center justify-center gap-3 mb-2">
             <img
               src="/assets/icon.png"
-              alt="Flow Browser Logo"
+              alt="Puerta Browser Logo"
               className="object-contain rounded-full size-16 md:size-20"
             />
           </div>

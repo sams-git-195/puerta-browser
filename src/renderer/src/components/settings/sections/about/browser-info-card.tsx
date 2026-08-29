@@ -41,7 +41,7 @@ export function BrowserInfoCard() {
     <div className="rounded-lg border bg-card text-card-foreground p-6">
       <div className="mb-4">
         <h3 className="text-xl font-semibold tracking-tight">Browser Information</h3>
-        <p className="text-sm text-muted-foreground mt-1">Details about your Flow Browser installation.</p>
+        <p className="text-sm text-muted-foreground mt-1">Details about your Puerta Browser installation.</p>
       </div>
 
       {isLoading ? (
@@ -52,7 +52,7 @@ export function BrowserInfoCard() {
       ) : appInfo ? (
         // Using a 3-column grid for label & value to better control alignment and wrapping
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-1 border-t pt-4">
-          <InfoRow label="Browser Name" value="Flow Browser" />
+          <InfoRow label="Browser Name" value="Puerta Browser" />
           <InfoRow label="Version" value={appInfo.app_version} />
           <InfoRow label="Build Number" value={appInfo.build_number} />
           <InfoRow label="Engine Version" value={`Chromium ${appInfo.chrome_version}`} />

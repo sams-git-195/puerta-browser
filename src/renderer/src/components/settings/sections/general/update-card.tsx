@@ -23,7 +23,7 @@ import {
 import { useAppUpdates } from "@/components/providers/app-updates-provider";
 import { cn } from "@/lib/utils";
 
-const DOWNLOAD_PAGE = "https://flow-browser.com/download/";
+const DOWNLOAD_PAGE = "https://github.com/sams-git-195/puerta-browser/releases";
 
 interface UpdateState {
   currentVersion: string;
@@ -129,7 +129,7 @@ export function UpdateCard() {
       return (
         <>
           <CheckCircle2 className="h-5 w-5 mr-2 text-green-500" />{" "}
-          <span className="text-sm text-green-500">Flow is up to date</span>
+          <span className="text-sm text-green-500">Puerta is up to date</span>
         </>
       );
     }

@@ -6,7 +6,7 @@ function printHeader() {
     console.log("\n".repeat(75));
   }
 
-  console.log("\x1b[34m%s\x1b[0m", "--- Flow Browser ---");
+  console.log("\x1b[34m%s\x1b[0m", "--- Puerta Browser ---");
 
   if (app.isPackaged) {
     console.log("\x1b[32m%s\x1b[0m", `Production Build (${app.getVersion()})`);

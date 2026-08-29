@@ -29,7 +29,7 @@ export function OnboardingFinish({ advance }: { advance: OnboardingAdvanceCallba
       >
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">{"You're All Set"}</h1>
         <p className="text-gray-400 text-lg max-w-md mx-auto">
-          Flow Browser is ready. You can always adjust these settings later.
+          Puerta Browser is ready. You can always adjust these settings later.
         </p>
       </motion.div>
 

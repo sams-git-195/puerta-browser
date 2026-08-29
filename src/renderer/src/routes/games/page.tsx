@@ -106,10 +106,10 @@ function Page() {
           />
           <CardHeader className="border-b border-border/40">
             <CardTitle className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text text-transparent">
-              Flow Games
+              Puerta Games
             </CardTitle>
             <CardDescription className="text-lg">
-              Explore a collection of offline games available in Flow
+              Explore a collection of offline games available in Puerta
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -141,7 +141,7 @@ function Page() {
 function App() {
   return (
     <>
-      <title>Flow Games</title>
+      <title>Puerta Games</title>
       <Page />
     </>
   );

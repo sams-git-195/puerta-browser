@@ -1,6 +1,6 @@
 # Adding a Database Migration
 
-Flow Browser stores local app data in SQLite. The schema is defined in `src/main/saving/db/schema.ts`, generated migration SQL lives in `drizzle/`, and the app applies migrations automatically during database initialization from `src/main/saving/db/index.ts`.
+Puerta Browser stores local app data in SQLite. The schema is defined in `src/main/saving/db/schema.ts`, generated migration SQL lives in `drizzle/`, and the app applies migrations automatically during database initialization from `src/main/saving/db/index.ts`.
 
 ## When You Need a Migration
 
@@ -71,7 +71,7 @@ Start the app in development:
 bun dev
 ```
 
-On first database access, Flow Browser runs Drizzle's migrator against the `drizzle/` directory automatically.
+On first database access, Puerta Browser runs Drizzle's migrator against the `drizzle/` directory automatically.
 
 - In development, migrations are loaded from the project-root `drizzle/` folder.
 - In packaged builds, `electron-builder` copies that folder into the app's `resources/drizzle` directory.

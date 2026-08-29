@@ -1,10 +1,10 @@
-# Chromium-inspired browsing history (Flow)
+# Chromium-inspired browsing history (Puerta)
 
-This document is the **source of truth** for how Flow stores and surfaces browsing history. It is derived from the Chromium History deep dive (URLs + visits, SQLite, per-profile scope, retention) but **kept simpler** than Chromium—no sync, separate Favicons DB, Top Sites, segments, clusters, or downloads-in-history.
+This document is the **source of truth** for how Puerta stores and surfaces browsing history. It is derived from the Chromium History deep dive (URLs + visits, SQLite, per-profile scope, retention) but **kept simpler** than Chromium—no sync, separate Favicons DB, Top Sites, segments, clusters, or downloads-in-history.
 
 ## Goals
 
-- Persist **real** history for omnibox and **`flow://history`**.
+- Persist **real** history for omnibox and **`puerta://history`**.
 - Mirror Chromium’s **core data model**: one row per URL (`urls`) and one row per navigation (`visits`).
 - Scope data **per profile**, like Chromium’s per-profile `History` file.
 - Apply a simple **90-day retention** policy aligned with Chromium’s default horizon.
@@ -17,7 +17,7 @@ This document is the **source of truth** for how Flow stores and surfaces browsi
 
 ## Storage
 
-- **Engine:** SQLite via `better-sqlite3` / Drizzle, same `flow.db` as other Flow state.
+- **Engine:** SQLite via `better-sqlite3` / Drizzle, same `flow.db` as other Puerta state.
 - **Tables:**
   - `history_urls` — canonical URL row per `(profile_id, url)`:
     - `id`, `profile_id`, `url`, `title`, `visit_count`, `typed_count`, `last_visit_time`
@@ -53,17 +53,17 @@ Other navigations (links, redirects, UI outside the omnibox) do not increment `t
 - **`flow.history.list()`** — aggregated URL rows for the window’s profile.
 - Ranking uses `visit_count`, `typed_count`, `last_visit_time`, and match quality.
 
-### History page (`flow://history`)
+### History page (`puerta://history`)
 
 - Chronological **visit** list (join visits + URLs), Chromium-style **grouping by calendar day** (Today, Yesterday, …).
 - **Search** filters title and URL (case-insensitive substring).
 - **Row actions:** primary row is a normal `<a href>` (same-tab navigation); **context menu** (right-click) for open in current tab, new tab, copy link, delete one visit, delete all visits for that URL row.
 - **Clear browsing data** clears all history for the current profile.
-- Uses Flow UI patterns (cards, dark theme route, shadcn-style components) like **Extensions**.
+- Uses Puerta UI patterns (cards, dark theme route, shadcn-style components) like **Extensions**.
 
 ### Discoverability
 
-- Default **new tab** quick link **History** (`flow://history`).
+- Default **new tab** quick link **History** (`puerta://history`).
 - Omnibox **pedal** for queries like “history” / “browse history”.
 
 ## Retention

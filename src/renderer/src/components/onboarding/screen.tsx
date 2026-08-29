@@ -11,7 +11,7 @@ export function OnboardingScreen({
 }) {
   return (
     <div className="select-none relative h-screen w-full overflow-hidden bg-[#050A20] flex flex-col">
-      <title>Onboarding | Flow Browser</title>
+      <title>Onboarding | Puerta Browser</title>
 
       {/* Draggable topbar region */}
       <div className="app-drag w-full h-10 shrink-0 flex items-center justify-center relative z-modal">

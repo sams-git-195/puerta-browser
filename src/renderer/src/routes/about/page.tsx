@@ -16,8 +16,8 @@ function Page() {
       >
         <Card className="border-border shadow-lg">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold">Flow URLs</CardTitle>
-            <CardDescription>A list of available Flow browser URLs</CardDescription>
+            <CardTitle className="text-3xl font-bold">Puerta URLs</CardTitle>
+            <CardDescription>A list of available Puerta browser URLs</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -48,7 +48,7 @@ function Page() {
 function App() {
   return (
     <>
-      <title>Flow URLs</title>
+      <title>Puerta URLs</title>
       <Page />
     </>
   );

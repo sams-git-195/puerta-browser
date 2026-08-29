@@ -199,7 +199,7 @@ function HistoryPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Clear all history?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This removes every visit in this profile from Flow. This cannot be undone.
+                  This removes every visit in this profile from Puerta. This cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

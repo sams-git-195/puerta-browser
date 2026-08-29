@@ -2,7 +2,7 @@
 
 ## Problem
 
-Flow Browser has an icon customization system that lets users pick from 14 app icons. It was disabled on macOS because `app.dock.setIcon()` overrides the Liquid Glass icon from `Assets.car`, and the change doesn't persist across app restarts anyway.
+Puerta Browser has an icon customization system that lets users pick from 14 app icons. It was disabled on macOS because `app.dock.setIcon()` overrides the Liquid Glass icon from `Assets.car`, and the change doesn't persist across app restarts anyway.
 
 ## Goals
 

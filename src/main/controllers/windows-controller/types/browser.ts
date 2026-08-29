@@ -93,7 +93,7 @@ export class BrowserWindow extends BaseWindow<BrowserWindowEvents> {
         contextIsolation: true
       },
 
-      title: "Flow",
+      title: "Puerta",
       frame: false,
       transparent: false,
       resizable: true,

@@ -1,6 +1,6 @@
 # IPC Namespaces
 
-This directory contains all `ipcMain` registrations that the Flow browser exposes to renderer processes. Each module keeps the handlers for a single area of the app (e.g. sessions, windows, browser state) and is imported by `src/main/ipc/main.ts`. Importing a module is enough to register its listeners.
+This directory contains all `ipcMain` registrations that the Puerta browser exposes to renderer processes. Each module keeps the handlers for a single area of the app (e.g. sessions, windows, browser state) and is imported by `src/main/ipc/main.ts`. Importing a module is enough to register its listeners.
 
 > **Renderer opt-in:** Renderers that expect push-style updates must emit `listeners:add`/`listeners:remove` (see below) so the main process can deliver broadcasts only to windows that are listening.
 

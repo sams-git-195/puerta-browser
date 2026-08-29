@@ -27,7 +27,7 @@ export function SetAsDefaultBrowserSetting() {
         <Label htmlFor="default-browser-button" className="text-sm font-medium">
           Default Browser
         </Label>
-        <p className="text-xs text-muted-foreground">Set Flow as your default browser.</p>
+        <p className="text-xs text-muted-foreground">Set Puerta as your default browser.</p>
       </div>
       <div className="flex items-center gap-2">
         {isDefault === null && <Loader2Icon className="animate-spin h-5 w-5 text-muted-foreground" />}
@@ -39,7 +39,7 @@ export function SetAsDefaultBrowserSetting() {
             onClick={setDefaultBrowser}
           >
             <GlobeIcon className="h-4 w-4 mr-2" />
-            Set to Flow
+            Set to Puerta
           </Button>
         )}
         {isDefault === true && (
@@ -50,7 +50,7 @@ export function SetAsDefaultBrowserSetting() {
             disabled
           >
             <HeartIcon className="h-4 w-4 mr-2 text-green-500" />
-            Flow is Default
+            Puerta is Default
           </Button>
         )}
       </div>

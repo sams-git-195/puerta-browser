@@ -12,7 +12,7 @@ interface Pedal {
 
 const PEDALS = [
   {
-    triggers: ["settings", "app icon", "profiles", "spaces", "about flow", "onboarding"],
+    triggers: ["settings", "app icon", "profiles", "spaces", "about puerta", "onboarding"],
     action: "open_settings",
     description: "Open settings"
   },

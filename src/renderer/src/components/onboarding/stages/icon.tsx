@@ -87,7 +87,7 @@ export function OnboardingIcon({ advance }: { advance: OnboardingAdvanceCallback
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">Choose Your Icon</h1>
-        <p className="text-gray-400 text-lg">Personalize Flow Browser with an icon you love</p>
+        <p className="text-gray-400 text-lg">Personalize Puerta Browser with an icon you love</p>
       </motion.div>
 
       {/* Icon Grid */}

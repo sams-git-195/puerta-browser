@@ -1,6 +1,6 @@
 # Tab Class Documentation
 
-The `Tab` class represents a single tab within the Flow browser. It manages the web content (`WebContentsView`), state, layout, and lifecycle of a browser tab.
+The `Tab` class represents a single tab within the Puerta browser. It manages the web content (`WebContentsView`), state, layout, and lifecycle of a browser tab.
 
 ## Overview
 

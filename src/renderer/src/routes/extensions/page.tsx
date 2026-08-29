@@ -72,7 +72,7 @@ function ExtensionsPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-semibold text-foreground">Flow Extensions</h1>
+                  <h1 className="text-2xl font-semibold text-foreground">Puerta Extensions</h1>
                   <p className="text-muted-foreground mt-1">Manage your browser extensions</p>
                 </div>
                 <a
