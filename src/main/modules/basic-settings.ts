@@ -97,6 +97,15 @@ export const BasicSettings: BasicSetting[] = [
     ]
   },
 
+  // Glance (open links in a preview popup over the current page)
+  {
+    id: "glanceEnabled",
+    name: "Open links in Glance preview",
+    showName: true,
+    type: "boolean",
+    defaultValue: true
+  },
+
   // Command Palette Opacity
   {
     id: "commandPaletteOpacity",
@@ -260,6 +269,13 @@ export const BasicSettingCards: BasicSettingCard[] = [
     title: "New Tab Mode",
     subtitle: "Choose how new tabs should open",
     settings: ["newTabMode"]
+  },
+
+  // Glance Card
+  {
+    title: "Glance",
+    subtitle: "Links that would open a new tab open in a quick preview over the current page",
+    settings: ["glanceEnabled"]
   },
 
   // Command Palette Card

@@ -199,7 +199,12 @@ export class BaseTabGroup extends TypedEventEmitter<TabGroupEvents> {
 
     this.tabIds = this.tabIds.filter((id) => id !== tabId);
     this.emit("tab-removed", tabId);
-    this.emit("changed");
+    // A "tab-removed" handler may have destroyed the group (e.g. a glance
+    // group dropping below 2 tabs). Emitting on a destroyed emitter throws,
+    // which would abort the caller's destroy cascade mid-way.
+    if (!this.isDestroyed) {
+      this.emit("changed");
+    }
     return true;
   }
 
