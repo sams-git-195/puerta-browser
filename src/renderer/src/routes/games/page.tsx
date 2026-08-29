@@ -67,21 +67,21 @@ function Page() {
     {
       name: "Chrome Dino",
       description: "The famous Chrome offline dinosaur game",
-      url: "flow-external://dino.chrome.game",
+      url: "puerta-external://dino.chrome.game",
       category: "Classic",
       icon: "🦖"
     },
     {
       name: "Edge Surf (v1)",
       description: "The classic surf game from Microsoft Edge",
-      url: "flow-external://v1.surf.edge.game",
+      url: "puerta-external://v1.surf.edge.game",
       category: "Classic",
       icon: "🏄"
     },
     {
       name: "Edge Surf (v2)",
       description: "The surf game from Microsoft Edge",
-      url: "flow-external://v2.surf.edge.game",
+      url: "puerta-external://v2.surf.edge.game",
       category: "Classic",
       icon: "🌊"
     }

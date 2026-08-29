@@ -25,7 +25,7 @@ const SNAPSHOT_MAX_WIDTH = 1920;
 
 /**
  * Stores a NativeImage snapshot (downscaling if wider than SNAPSHOT_MAX_WIDTH)
- * and returns a UUID for retrieval via `flow-internal://tab-snapshot?id={uuid}`.
+ * and returns a UUID for retrieval via `puerta-internal://tab-snapshot?id={uuid}`.
  */
 export function storeSnapshot(image: Electron.NativeImage): string {
   const id = generateID();

@@ -42,9 +42,9 @@ function commitSuggestion(suggestion: OmniboxSuggestion, openIn: "current" | "ne
       } else if (a === "open_incognito_window") {
         flow.browser.createIncognitoWindow();
       } else if (a === "open_extensions") {
-        flow.tabs.newTab("flow://extensions", true);
+        flow.tabs.newTab("puerta://extensions", true);
       } else if (a === "open_history") {
-        flow.tabs.newTab("flow://history", true);
+        flow.tabs.newTab("puerta://history", true);
       }
       break;
     }

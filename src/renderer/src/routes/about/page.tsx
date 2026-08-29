@@ -22,7 +22,7 @@ function Page() {
           <CardContent>
             <div className="space-y-4">
               {hostnames.map((hostname) => {
-                const url = `flow://${hostname}`;
+                const url = `puerta://${hostname}`;
                 return (
                   <div key={url} className="p-3 rounded-md bg-muted flex justify-between items-center">
                     <span className="text-foreground font-medium">{url}</span>

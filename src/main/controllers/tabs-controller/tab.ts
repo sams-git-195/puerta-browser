@@ -436,13 +436,13 @@ export class Tab extends TypedEventEmitter<TabEvents> {
 
   // --- Background Color ---
 
-  private static readonly WHITELISTED_PROTOCOLS = ["flow-internal:", "flow:"];
+  private static readonly WHITELISTED_PROTOCOLS = ["puerta-internal:", "puerta:"];
   private static readonly COLOR_TRANSPARENT = "#00000000";
   private static readonly COLOR_BACKGROUND = "#ffffffff";
 
   /**
    * Applies the correct background color based on the current URL.
-   * Internal protocols (flow:, flow-internal:) get a transparent background;
+   * Internal protocols (puerta:, puerta-internal:) get a transparent background;
    * everything else gets an opaque white background.
    */
   public applyUrlBackground(): void {
@@ -936,11 +936,11 @@ export class Tab extends TypedEventEmitter<TabEvents> {
    */
   public loadErrorPage(errorCode: number, url: string) {
     const parsedURL = URL.parse(url);
-    if (parsedURL && parsedURL.protocol === "flow:" && parsedURL.hostname === "error") {
+    if (parsedURL && parsedURL.protocol === "puerta:" && parsedURL.hostname === "error") {
       return; // Prevent infinite error page loop
     }
 
-    const errorPageURL = new URL("flow://error");
+    const errorPageURL = new URL("puerta://error");
     errorPageURL.searchParams.set("errorCode", errorCode.toString());
     errorPageURL.searchParams.set("url", url);
     errorPageURL.searchParams.set("initial", "1");

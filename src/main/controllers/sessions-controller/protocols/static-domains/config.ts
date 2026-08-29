@@ -1,9 +1,9 @@
 import type { StaticDomainInfo } from "./types";
 
 export const STATIC_DOMAINS: StaticDomainInfo[] = [
-  // flow-internal
+  // puerta-internal
   {
-    protocol: "flow-internal",
+    protocol: "puerta-internal",
     hostname: "main-ui",
     actual: {
       type: "route",
@@ -11,7 +11,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-internal",
+    protocol: "puerta-internal",
     hostname: "popup-ui",
     actual: {
       type: "route",
@@ -19,7 +19,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-internal",
+    protocol: "puerta-internal",
     hostname: "settings",
     actual: {
       type: "route",
@@ -27,7 +27,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-internal",
+    protocol: "puerta-internal",
     hostname: "omnibox",
     actual: {
       type: "route",
@@ -35,7 +35,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-internal",
+    protocol: "puerta-internal",
     hostname: "onboarding",
     actual: {
       type: "route",
@@ -43,9 +43,9 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
 
-  // flow
+  // puerta
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "new-tab",
     actual: {
       type: "route",
@@ -53,7 +53,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "error",
     actual: {
       type: "route",
@@ -61,7 +61,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "about",
     actual: {
       type: "route",
@@ -69,7 +69,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "games",
     actual: {
       type: "route",
@@ -77,7 +77,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "omnibox",
     actual: {
       type: "route",
@@ -85,7 +85,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "extensions",
     actual: {
       type: "route",
@@ -93,7 +93,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "history",
     actual: {
       type: "route",
@@ -101,7 +101,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "bangs",
     actual: {
       type: "route",
@@ -109,7 +109,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow",
+    protocol: "puerta",
     hostname: "pdf-viewer",
     actual: {
       type: "route",
@@ -117,9 +117,9 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
 
-  // flow-external
+  // puerta-external
   {
-    protocol: "flow-external",
+    protocol: "puerta-external",
     // Dino Game - Taken from https://github.com/yell0wsuit/chrome-dino-enhanced
     hostname: "dino.chrome.game",
     actual: {
@@ -128,7 +128,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-external",
+    protocol: "puerta-external",
     // Surf Game (v1) - Taken From https://github.com/yell0wsuit/ms-edge-letssurf
     hostname: "v1.surf.edge.game",
     actual: {
@@ -137,7 +137,7 @@ export const STATIC_DOMAINS: StaticDomainInfo[] = [
     }
   },
   {
-    protocol: "flow-external",
+    protocol: "puerta-external",
     // Surf Game (v2) - Taken from https://github.com/yell0wsuit/ms-edge-surf-2
     hostname: "v2.surf.edge.game",
     actual: {

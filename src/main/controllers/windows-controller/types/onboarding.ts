@@ -23,11 +23,11 @@ export class OnboardingWindow extends BaseWindow {
     });
 
     // Wait for default session (and its protocol handlers) to be ready
-    // before loading the flow-internal:// URL, matching the pattern used
+    // before loading the puerta-internal:// URL, matching the pattern used
     // by BrowserWindow. Without this, the loadURL call can fail on Linux
     // if the protocol hasn't been registered yet.
     sessionsController.whenDefaultSessionReady().then(() => {
-      browserWindow.loadURL("flow-internal://onboarding/");
+      browserWindow.loadURL("puerta-internal://onboarding/");
     });
 
     // Use settings.hide's behavior instead of the default one

@@ -138,7 +138,7 @@ function Page() {
         <div className="mt-8 flex flex-col items-center">
           <p className="text-gray-600 dark:text-zinc-400 mb-3">Want to play some games?</p>
           <motion.button
-            onClick={() => window.open("flow://games", "_blank")}
+            onClick={() => window.open("puerta://games", "_blank")}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 shadow-md"

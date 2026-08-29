@@ -119,7 +119,7 @@ export function IconSettings() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       {icon.imageId ? (
                         <img
-                          src={`flow://asset/icons/${icon.imageId}`}
+                          src={`puerta://asset/icons/${icon.imageId}`}
                           alt={icon.name}
                           className="size-10 platform-darwin:size-12 rounded-lg shadow-lg flex items-center justify-center text-xl font-bold text-white"
                         />

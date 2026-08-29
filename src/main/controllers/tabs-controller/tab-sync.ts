@@ -15,7 +15,7 @@ import { pinnedTabsController } from "@/controllers/pinned-tabs-controller";
 import {
   storeSnapshot,
   removeSnapshot
-} from "@/controllers/sessions-controller/protocols/_protocols/flow-internal/tab-snapshot";
+} from "@/controllers/sessions-controller/protocols/_protocols/puerta-internal/tab-snapshot";
 import type { TabPlaceholderUpdate } from "~/types/tabs";
 import { Tab } from "./tab";
 import { BaseTabGroup } from "./tab-groups";
@@ -37,7 +37,7 @@ function getTabsController(): TabsController {
   return _tabsController;
 }
 
-// Screenshot placeholders (served via flow-internal://tab-snapshot)
+// Screenshot placeholders (served via puerta-internal://tab-snapshot)
 const PLACEHOLDER_RELEASE_DELAY_MS = 180;
 
 type WindowPlaceholderState = {

@@ -8,7 +8,7 @@ export function setupInterceptRules(session: Session) {
   // Transform the User-Agent header
   setupUserAgentTransformer(session);
 
-  // Bypass CORS for flow and flow-internal protocols
+  // Bypass CORS for puerta and puerta-internal protocols
   setupCorsBypassForCustomProtocols(session);
 
   // Setup redirects required for the better PDF viewer
