@@ -3,6 +3,7 @@
   "productName": "Puerta",
   "version": "0.1.0",
   "description": "Puerta Browser — your gateway to the internet. An open-source Chromium-based browser with side tabs, forked from Flow Browser.",
+  "license": "GPL-3.0-only",
   "main": "./out/main/index.js",
   "author": {
     "name": "Sam",
