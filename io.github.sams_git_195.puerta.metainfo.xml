@@ -43,6 +43,18 @@
   </requires>
 
   <releases>
+    <release version="0.2.0" date="2026-08-29">
+      <description>
+        <p>Dia/Zen-style browsing features:</p>
+        <ul>
+          <li>Glance: links open in a quick preview popup — promote to a tab or dismiss</li>
+          <li>Bookmarks with folders that act like pinned tabs, including automatic unloading</li>
+          <li>Split view: up to four tabs side by side</li>
+          <li>Background tabs now sleep after 1 hour by default to save memory</li>
+          <li>New setting to move the toolbar (address bar, navigation, extensions) to the top</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-08-29">
       <description>
         <p>Initial release of Puerta Browser.</p>
