@@ -55,6 +55,7 @@ export const AddressBar = memo(function AddressBar() {
     <div
       ref={containerRef}
       onClick={handleClick}
+      data-component="address-bar"
       className={cn(
         "w-full min-w-0 h-9 rounded-xl select-none",
         "bg-black/10 dark:bg-white/15",

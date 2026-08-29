@@ -129,6 +129,25 @@ export const BasicSettings: BasicSetting[] = [
     ]
   },
 
+  // Toolbar Position
+  {
+    id: "toolbarPosition",
+    name: "Toolbar Position",
+    showName: false,
+    type: "enum",
+    defaultValue: "sidebar",
+    options: [
+      {
+        id: "sidebar",
+        name: "In the Sidebar"
+      },
+      {
+        id: "top",
+        name: "Along the Top"
+      }
+    ]
+  },
+
   // Sidebar Side
   {
     id: "sidebarSide",
@@ -285,6 +304,13 @@ export const BasicSettingCards: BasicSettingCard[] = [
     title: "Command Palette",
     subtitle: "Choose how translucent the command palette should be",
     settings: ["commandPaletteOpacity"]
+  },
+
+  // Toolbar Card
+  {
+    title: "Toolbar",
+    subtitle: "Where the address bar, navigation buttons, and extensions live",
+    settings: ["toolbarPosition"]
   },
 
   // Sidebar Settings Card

@@ -10,7 +10,7 @@ import {
 import { BrowserSidebar } from "@/components/browser-ui/browser-sidebar/component";
 import { AnimatePresence, motion } from "motion/react";
 import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { SettingsProvider } from "@/components/providers/settings-provider";
+import { SettingsProvider, useSettings } from "@/components/providers/settings-provider";
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { ResizablePanelGroupWithProvider } from "@/components/ui/resizable-extras";
 import { UpdateEffect } from "@/components/browser-ui/update-effect";
@@ -168,12 +168,13 @@ const LoadingIndicator = memo(function LoadingIndicator() {
 });
 
 /**
- * Compact toolbar for popup windows – replaces the sidebar with
- * back/forward/reload controls and an address bar in a single row.
- * Reports its measured height as contentTopOffset so the main process
- * can push the tab's WebContentsView below it.
+ * Horizontal toolbar row: back/forward/reload controls plus an address bar
+ * (which carries the extension actions). Reports its measured height as
+ * contentTopOffset so the main process pushes the tab's WebContentsView
+ * below it. Used by popup windows (instead of a sidebar) and by main
+ * windows when the "Toolbar Position: Along the Top" setting is active.
  */
-function PopupToolbar() {
+function HorizontalToolbar({ showWindowControls }: { showWindowControls: boolean }) {
   const { isCurrentSpaceLight } = useSpaces();
   const { setContentTopOffset } = useAdaptiveTopbar();
   const { platform } = usePlatform();
@@ -197,7 +198,7 @@ function PopupToolbar() {
 
   return (
     <div ref={ref} className={cn("w-full min-w-0 flex items-center gap-2 px-1 pb-2", !isCurrentSpaceLight && "dark")}>
-      {platform === "darwin" && <SidebarWindowControlsMacOS />}
+      {showWindowControls && platform === "darwin" && <SidebarWindowControlsMacOS />}
       <div className="shrink-0">
         <NavigationControls />
       </div>
@@ -234,9 +235,11 @@ function InternalBrowserUI({ isReady, type }: { isReady: boolean; type: BrowserU
   // components above to prevent the entire layout from rerendering.
   const { mode: sidebarMode, attachedDirection } = useBrowserSidebar();
   const { topbarVisible, topbarHeight } = useAdaptiveTopbar();
+  const { getSetting } = useSettings();
   const browserContentAnchorRef = useRef<HTMLDivElement>(null);
 
   const hasSidebar = type === "main";
+  const topToolbar = hasSidebar && getSetting<string>("toolbarPosition") === "top";
 
   return (
     <FullscreenGuard>
@@ -283,7 +286,7 @@ function InternalBrowserUI({ isReady, type }: { isReady: boolean; type: BrowserU
 
                     <div className="relative flex-1 min-w-0 h-full flex flex-col">
                       <LoadingIndicator />
-                      {!hasSidebar && <PopupToolbar />}
+                      {(!hasSidebar || topToolbar) && <HorizontalToolbar showWindowControls={!hasSidebar} />}
                       <div className="relative flex-1 min-h-0 flex">
                         <div ref={browserContentAnchorRef} className="absolute inset-0 pointer-events-none" />
                         <WebPrompts anchorRef={browserContentAnchorRef} />
