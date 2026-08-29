@@ -25,7 +25,6 @@ These dependencies are bundled into the `node_modules` of the app. These should 
 - electron-webauthn - Handles WebAuthn (Passkeys) for websites on macOS.
 - icojs - ICO Parser for favicons.
 - mime-types - Provide mime types.
-- posthog-node - Provide analytics.
 - arktype - Handles Data Validation. (Better alternative to zod)
 - sharp - Image Processing.
 - tldts - Parse top-level domains from URLs for macOS webauthn & omnibox.

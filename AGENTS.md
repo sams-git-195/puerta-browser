@@ -1,44 +1,52 @@
 # AGENTS.md
 
-### Overview
+Guidance for AI coding agents (Claude Code, opencode, and others) working on Puerta Browser.
+Claude-specific model policy lives in `CLAUDE.md`.
 
-Flow Browser is an Electron-based web browser built with React 19, TypeScript, Vite, and TailwindCSS 4. It uses an embedded SQLite database (via `better-sqlite3` / Drizzle ORM) and has no external backend services.
+## Overview
 
-### Prerequisites
+Puerta Browser is an Electron-based web browser (React 19, TypeScript, Vite,
+TailwindCSS 4) with an embedded SQLite database (better-sqlite3 / Drizzle ORM)
+and no external backend. It is a GPLv3 fork of Flow Browser.
+
+## Prerequisites
 
 - **Node.js v22+** (see `.nvmrc`)
-- **Bun v1.2.0+** (package manager; lockfile is `bun.lock`)
-- **build-essential** and **python3** (for native module compilation via node-gyp)
+- **Bun v1.2+** — the only package manager/runner for this repo.
+  **Never use npm, pnpm, yarn, or bare node/vite commands.**
+- **build-essential** and **python3** (native module compilation via node-gyp)
 
-### Key commands
+## Key commands
 
-Standard dev commands are in `package.json`. Quick reference:
+| Task         | Command             |
+| ------------ | ------------------- |
+| Install deps | `bun install`       |
+| Lint         | `bun lint`          |
+| Typecheck    | `bun typecheck`     |
+| Test         | `bun run test:unit` |
+| Dev mode     | `bun dev`           |
+| Format       | `bun format`        |
 
-| Task           | Command         |
-| -------------- | --------------- |
-| Install deps   | `bun install`   |
-| Lint           | `bun lint`      |
-| Typecheck      | `bun typecheck` |
-| Dev mode       | `bun dev`       |
-| Dev with watch | `bun dev:watch` |
-| Format         | `bun format`    |
+## Coding practices
 
-### Running the Electron app in headless / cloud environments
+- **Test what you change.** Add or update vitest tests (`tests/`) for any
+  behavior change in testable code; run `bun run test:unit` before claiming done.
+- **Keep code clean and readable, with brief explanatory notes where they help
+  the next reader** — especially around Electron IPC boundaries, protocol
+  handlers, and anything non-obvious.
+- Keep changes small and typed; follow the existing patterns of the file you
+  are editing.
+- Before pushing: `bun run lint && bun run typecheck && bun run format` and
+  `bun run test:unit` must all pass, or CI will fail.
 
-- The `postinstall` script (`electron-builder install-app-deps`) rebuilds native modules automatically during `bun install`.
+## Gotchas
 
-### Before pushing changes
-
-- Make sure to run `bun run lint`, `bun run typecheck`, `bun run format` and address any issues, or the CI might fail.
-
-### Gotchas
-
-- The `electron` dependency is installed from a Castlabs fork (`@castlabs/electron-releases`) for Widevine DRM support. This is normal and expected.
-- There are no automated test suites (no `test` script in `package.json`). Validation is done via `bun lint` and `bun typecheck`.
+- The `electron` dependency comes from a Castlabs fork
+  (`castlabs/electron-releases`) for Widevine DRM. This is normal.
+- Internal pages use the `puerta://` URL scheme; the _internal_ IPC API
+  namespace is still called `flow` (`src/shared/flow/`, `window.flow`) —
+  do not rename it.
 - Animation imports use `motion/react` (not `framer-motion`).
-
-## Cursor Cloud specific instructions (Ignore if not running on Cursor Cloud)
-
-- The VM already has a display at `DISPLAY=:1`. Run `bun dev` directly; no `xvfb-run` wrapper is needed.
-- GLib-GObject and D-Bus warnings in the Electron stderr output are harmless on headless Linux and can be ignored.
-- On first launch, Flow Browser shows an onboarding wizard that must be completed before the main browser window appears.
+- The `postinstall` script rebuilds native modules during `bun install`.
+- On first launch the onboarding wizard must be completed before the main
+  window appears.

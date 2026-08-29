@@ -32,7 +32,8 @@ const electronBuilderConfig: Configuration = {
     "!{CHANGELOG.md,README.md,CONTRIBUTING.md,docs/**}",
     "!{scripts/**}",
     "!{.env,.env.*,.npmrc,bun.lock}",
-    "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
+    "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}",
+    "!{tests/**,vitest.config.ts}"
   ],
   protocols: [
     {
@@ -112,12 +113,16 @@ const electronBuilderConfig: Configuration = {
     icon: "./build/volume-icon.icns"
   },
   linux: {
-    target: ["AppImage", "deb"],
+    target: ["AppImage", "deb", "rpm"],
+    executableName: "puerta",
     category: "Network;WebBrowser;",
     executableArgs: ["--ozone-platform-hint=auto"],
     icon: "icon.png"
   },
   appImage: {
+    artifactName: "${name}-${version}-${arch}.${ext}"
+  },
+  rpm: {
     artifactName: "${name}-${version}-${arch}.${ext}"
   },
   npmRebuild: false,

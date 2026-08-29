@@ -3,6 +3,7 @@
   "productName": "Puerta",
   "version": "0.1.0",
   "description": "Puerta Browser — your gateway to the internet. An open-source Chromium-based browser with side tabs, forked from Flow Browser.",
+  "license": "GPL-3.0-only",
   "main": "./out/main/index.js",
   "author": {
     "name": "Sam",
@@ -14,6 +15,7 @@
     "typecheck": "bun run typecheck:node && bun run typecheck:web",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "test:unit": "vitest run",
     "start": "electron-vite preview",
     "start:nightly": "bun run scripts/temp-change-name/command --name 'Puerta Nightly' electron-vite preview",
     "dev": "electron-vite dev",
@@ -111,7 +113,8 @@
     "tailwindcss-animate": "^1.0.7",
     "tw-animate-css": "^1.2.9",
     "typescript": "^6.0.2",
-    "vite": "^8.0.8"
+    "vite": "^8.0.8",
+    "vitest": "^4.1.11"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

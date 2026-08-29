@@ -38,4 +38,6 @@ Puerta Browser is a fork of [Flow Browser](https://github.com/MultiboxLabs/flow-
 by MultiboxLabs / iamEvan, continued independently after upstream maintenance stopped.
 Enormous thanks to the original authors.
 
+Parts of the browser shell derive from [electron-browser-shell](https://github.com/samuelmaddock/electron-browser-shell) by Sam Maddock (via Flow Browser).
+
 Licensed under the [GNU GPL v3.0](./LICENSE), as was the original.
