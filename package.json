@@ -48,7 +48,6 @@
     "knex": "^3.2.9",
     "mime-types": "^3.0.1",
     "objcjs-types": "^0.8.0",
-    "posthog-node": "^5.29.2",
     "sharp": "^0.34.5",
     "tldts": "^7.0.28"
   },
