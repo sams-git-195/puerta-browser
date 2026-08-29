@@ -32,7 +32,8 @@ const electronBuilderConfig: Configuration = {
     "!{CHANGELOG.md,README.md,CONTRIBUTING.md,docs/**}",
     "!{scripts/**}",
     "!{.env,.env.*,.npmrc,bun.lock}",
-    "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
+    "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}",
+    "!{tests/**,vitest.config.ts}"
   ],
   protocols: [
     {
