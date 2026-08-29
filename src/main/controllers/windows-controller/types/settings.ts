@@ -44,11 +44,11 @@ export class SettingsWindow extends BaseWindow {
     super("settings", browserWindow, { deferShowUntilAfterLoad: true });
 
     // Wait for default session (and its protocol handlers) to be ready
-    // before loading the flow-internal:// URL, matching the pattern used
+    // before loading the puerta-internal:// URL, matching the pattern used
     // by BrowserWindow and OnboardingWindow. Without this, the loadURL
     // call can fail on Linux if the protocol hasn't been registered yet.
     sessionsController.whenDefaultSessionReady().then(() => {
-      browserWindow.loadURL("flow-internal://settings/");
+      browserWindow.loadURL("puerta-internal://settings/");
     });
 
     // Fallback: On Linux, ready-to-show may never fire for frameless

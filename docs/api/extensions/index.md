@@ -1,6 +1,6 @@
 # Extensions API
 
-The Extensions API provides functionalities for working with browser extensions in Flow Browser. This document serves as an index to the available extension-related APIs.
+The Extensions API provides functionalities for working with browser extensions in Puerta Browser. This document serves as an index to the available extension-related APIs.
 
 ## Available APIs
 

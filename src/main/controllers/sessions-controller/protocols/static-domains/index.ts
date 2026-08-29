@@ -39,7 +39,7 @@ export function registerStaticDomainsRoutes(protocol: CustomProtocol, app: Hono)
 
     // Invalid domain, show error page
     // -300 is ERR_INVALID_URL (https://github.com/ccnokes/chrome-network-errors/blob/master/index.js)
-    const errorPageURL = new URL("flow://error");
+    const errorPageURL = new URL("puerta://error");
     errorPageURL.searchParams.set("errorCode", "-300");
     errorPageURL.searchParams.set("url", c.req.url);
     errorPageURL.searchParams.set("initial", "1");

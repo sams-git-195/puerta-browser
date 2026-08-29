@@ -38,12 +38,12 @@ export function setupBetterPdfViewer(session: Session) {
         addPdfResponseToCache(cacheKey, response);
 
         // Construct the local file URL
-        const localFileURL = new URL("flow://pdf-cache");
+        const localFileURL = new URL("puerta://pdf-cache");
         localFileURL.searchParams.set("url", url);
         localFileURL.searchParams.set("key", cacheKey);
 
         // Redirect to PDF viewer with the local file path
-        const viewerURL = new URL("flow://pdf-viewer");
+        const viewerURL = new URL("puerta://pdf-viewer");
         viewerURL.searchParams.set("url", url);
         viewerURL.searchParams.set("cacheURL", localFileURL.toString());
 

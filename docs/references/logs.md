@@ -1,7 +1,7 @@
-# Logs from Flow
+# Logs from Puerta
 
 Logs can be found in these directories:
 
-- on Linux: `~/.config/Flow/logs/`
-- on macOS: `~/Library/Logs/Flow/`
-- on Windows: `%USERPROFILE%\AppData\Roaming\Flow\logs\`
+- on Linux: `~/.config/Puerta/logs/`
+- on macOS: `~/Library/Logs/Puerta/`
+- on Windows: `%USERPROFILE%\AppData\Roaming\Puerta\logs\`

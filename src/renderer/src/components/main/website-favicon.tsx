@@ -18,7 +18,7 @@ export function WebsiteFavicon({
   const [useCustomFavicon, setUseCustomFavicon] = useState(false);
 
   if (useFlowUtility) {
-    const srcUrl = new URL("flow://favicon");
+    const srcUrl = new URL("puerta://favicon");
     srcUrl.searchParams.set("url", url);
     return (
       <img

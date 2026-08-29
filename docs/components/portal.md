@@ -79,7 +79,7 @@ The component uses a custom hook (`useCopyStyles`) to ensure that all styles fro
 
 #### Positioning and Sizing
 
-- Uses Flow Browser's interface to position the window (`flow.interface.setComponentWindowBounds`)
+- Uses Puerta Browser's interface to position the window (`flow.interface.setComponentWindowBounds`)
 - Converts CSS size values to pixels with the `useCssSizeToPixels` hook
 
 ### Backend Implementation
@@ -148,7 +148,7 @@ When working on the Electron implementation:
 
 ## Technical Considerations
 
-- The portal uses Flow Browser's native window management capabilities
+- The portal uses Puerta Browser's native window management capabilities
 - Electron's `WebContentsView` instances are used instead of traditional windows for better integration
 - Style synchronization can be complex and may need adjustments for specific CSS features
 - Window objects must be properly cleaned up to prevent resource leaks

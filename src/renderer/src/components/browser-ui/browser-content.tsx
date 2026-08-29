@@ -85,7 +85,7 @@ function BrowserContent() {
     setPlaceholderSnapshotId(null);
   }, [currentSpace?.id]);
 
-  const placeholderUrl = placeholderSnapshotId ? `flow-internal://tab-snapshot?id=${placeholderSnapshotId}` : null;
+  const placeholderUrl = placeholderSnapshotId ? `puerta-internal://tab-snapshot?id=${placeholderSnapshotId}` : null;
 
   // Derive sidebar visibility from the mode.
   // Floating sidebars are overlays (PortalComponent) and have zero layout impact.

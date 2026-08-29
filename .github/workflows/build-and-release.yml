@@ -15,12 +15,16 @@ on:
 run-name: Release ${{ github.ref_name }}
 
 jobs:
+  # macOS/Windows builds removed — require Apple signing + Castlabs EVS credentials we don't have yet.
+  # Re-add from upstream history if credentials materialize.
+  # The Flatpak setup was removed too: it served upstream's Flathub packaging, which does not apply
+  # to this fork.
   release:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-15-intel, windows-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm]
 
     steps:
       - name: Check out Git repository
@@ -44,7 +48,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
         run: |
           sudo apt-get update
-          sudo apt-get install -y flatpak-builder elfutils dpkg fakeroot
+          sudo apt-get install -y elfutils dpkg fakeroot
 
       - name: Install Additional Build Dependencies (Ubuntu ARM only)
         if: matrix.os == 'ubuntu-24.04-arm'
@@ -52,59 +56,16 @@ jobs:
           sudo apt-get install -y ruby ruby-dev
           sudo gem install --no-document fpm -v 1.17.0
 
-      - name: Setup Flatpak (Ubuntu only)
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
-        run: |
-          flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
       - name: Install Dependencies
         run: bun install --development --frozen-lockfile
         env:
           SHARP_IGNORE_GLOBAL_LIBVIPS: 1
-
-      - name: Install Castlabs EVS
-        if: matrix.os == 'macos-latest' || matrix.os == 'macos-15-intel' || matrix.os == 'windows-latest'
-        run: python3 -m pip install castlabs-evs==1.1.5 --break-system-packages
-
-      - name: Login to Castlabs EVS (macOS)
-        if: matrix.os == 'macos-latest' || matrix.os == 'macos-15-intel'
-        continue-on-error: true
-        run: python3 -m castlabs_evs.account --no-ask reauth -A $ACCOUNT_NAME -P $PASSWD
-        env:
-          ACCOUNT_NAME: ${{ secrets.CASTLABS_EVS_ACCOUNT_NAME }}
-          PASSWD: ${{ secrets.CASTLABS_EVS_PASSWORD }}
-
-      - name: Login to Castlabs EVS (Windows)
-        if: matrix.os == 'windows-latest'
-        continue-on-error: true
-        shell: cmd
-        run: python3 -m castlabs_evs.account --no-ask reauth -A "%ACCOUNT_NAME%" -P "%PASSWD%"
-        env:
-          ACCOUNT_NAME: ${{ secrets.CASTLABS_EVS_ACCOUNT_NAME }}
-          PASSWD: ${{ secrets.CASTLABS_EVS_PASSWORD }}
 
       - name: Build for Linux
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
         run: bun run build:linux -p always
         env:
           USE_SYSTEM_FPM: ${{ matrix.os == 'ubuntu-24.04-arm' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build for macOS
-        if: matrix.os == 'macos-latest' || matrix.os == 'macos-15-intel'
-        run: bun run build:mac -p always
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          APPLE_API_KEY_DATA: ${{ secrets.APPLE_API_KEY_DATA }}
-          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-
-      - name: Build for Windows
-        if: matrix.os == 'windows-latest'
-        run: bun run build:win -p always
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Build Artifacts
@@ -121,4 +82,3 @@ jobs:
             dist/*.tar.gz
             dist/*.yml
             dist/*.blockmap
-            dist/*.flatpak

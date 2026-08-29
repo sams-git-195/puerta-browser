@@ -14,7 +14,6 @@ import "./app-menu-controller";
 import "./default-browser-controller";
 
 // No Dependents
-import "./posthog-controller";
 import "./quit-controller";
 import "./auto-update-controller";
 import "./loaded-profiles-controller";

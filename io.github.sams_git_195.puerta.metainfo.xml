@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.sams_git_195.puerta</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>Puerta</name>
+  <summary>Your gateway to the internet</summary>
+
+  <description>
+    <p>
+      Puerta is a modern, open-source browser with side tabs, built on Chromium via Electron. It is a fork of Flow Browser, continued independently with a clean, minimalistic user interface that helps you focus on your work and get things done quickly.
+    </p>
+    <p>Features that make it stand out:</p>
+    <ul>
+      <li>Clean, collapsible sidebar</li>
+      <li>Spaces to organise your work</li>
+      <li>Command palette to quickly open a new tab, bookmark, or history</li>
+      <li>Supports most streaming services via Widevine</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.sams_git_195.puerta.desktop</launchable>
+
+  <url type="homepage">https://github.com/sams-git-195/puerta-browser</url>
+  <url type="bugtracker">https://github.com/sams-git-195/puerta-browser/issues</url>
+  <url type="vcs-browser">https://github.com/sams-git-195/puerta-browser</url>
+
+  <developer id="io.github.sams_git_195">
+    <name>Sam</name>
+  </developer>
+
+  <content_rating type="oars-1.1" />
+
+  <branding>
+    <color type="primary" scheme_preference="light">#f5f5f5</color>
+    <color type="primary" scheme_preference="dark">#1a1a2e</color>
+  </branding>
+
+  <requires>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <display_length compare="ge">768</display_length>
+  </requires>
+
+  <releases>
+    <release version="0.1.0" date="2026-08-29">
+      <description>
+        <p>Initial release of Puerta Browser.</p>
+      </description>
+    </release>
+  </releases>
+
+  <categories>
+    <category>Network</category>
+    <category>WebBrowser</category>
+  </categories>
+
+  <provides>
+    <binary>puerta</binary>
+  </provides>
+</component>

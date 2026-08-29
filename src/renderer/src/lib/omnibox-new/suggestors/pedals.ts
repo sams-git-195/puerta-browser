@@ -16,7 +16,7 @@ function mapRange(value: number, inMin: number, inMax: number, outMin: number, o
 // Icons are stored at `src/renderer/src/components/omnibox/pedal-glyph.tsx`
 const PEDALS = [
   {
-    triggers: ["open settings", "settings", "app icon", "profiles", "spaces", "about flow", "onboarding"],
+    triggers: ["open settings", "settings", "app icon", "profiles", "spaces", "about puerta", "onboarding"],
     action: "open_settings",
     description: "Open settings"
   },

@@ -232,7 +232,7 @@ export function SiteControlExtensions({ setOpen }: { setOpen: (open: boolean) =>
           )}
           tabIndex={-1}
           onClick={(event) => {
-            flow.tabs.newTab("flow://extensions", true);
+            flow.tabs.newTab("puerta://extensions", true);
             setOpen(false);
             event.stopPropagation();
           }}

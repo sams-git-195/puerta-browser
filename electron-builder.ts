@@ -17,8 +17,8 @@ if (customAppVersion) {
 
 // Main Configuration //
 const electronBuilderConfig: Configuration = {
-  appId: "dev.iamevan.flow",
-  productName: "Flow",
+  appId: "io.github.sams_git_195.puerta",
+  productName: "Puerta",
   ...(customAppVersion && { buildVersion: customAppVersion, extraMetadata: { version: customAppVersion } }),
   directories: {
     buildResources: "build"
@@ -85,7 +85,7 @@ const electronBuilderConfig: Configuration = {
     }
   ],
   win: {
-    executableName: "flow",
+    executableName: "puerta",
     verifyUpdateCodeSignature: false
   },
   nsis: {
@@ -123,7 +123,8 @@ const electronBuilderConfig: Configuration = {
   npmRebuild: false,
   publish: {
     provider: "github",
-    owner: "multiboxlabs",
+    owner: "sams-git-195",
+    repo: "puerta-browser",
     releaseType: "prerelease"
   },
   electronDist: "node_modules/electron/dist",

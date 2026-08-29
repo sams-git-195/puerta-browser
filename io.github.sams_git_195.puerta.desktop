@@ -1,12 +1,12 @@
 [Desktop Entry]
-Name=Flow
-Comment=Cleaner browsing, sharper focus
+Name=Puerta
+Comment=Your gateway to the internet
 GenericName=Web Browser
 Exec=run.sh %u
-Icon=com.flow_browser.flow
+Icon=io.github.sams_git_195.puerta
 Type=Application
 StartupNotify=true
-StartupWMClass=Flow
+StartupWMClass=Puerta
 Categories=Network;WebBrowser;
 MimeType=text/html;text/xml;application/xhtml+xml;application/pdf;x-scheme-handler/http;x-scheme-handler/https;
 Actions=new-window;new-incognito-window;

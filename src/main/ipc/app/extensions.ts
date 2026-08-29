@@ -38,7 +38,7 @@ async function generateSharedExtensionData(
     ? await translateManifestString(extensionPath, manifest.description)
     : undefined;
 
-  const iconURL = new URL("flow://extension-icon");
+  const iconURL = new URL("puerta://extension-icon");
   iconURL.searchParams.set("id", extensionId);
   iconURL.searchParams.set("profile", extensionsManager.profileId);
 

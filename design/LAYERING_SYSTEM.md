@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-Flow's UI composites multiple rendering surfaces: the base BrowserWindow
+Puerta's UI composites multiple rendering surfaces: the base BrowserWindow
 webContents (browser chrome), child WebContentsViews (tabs, portals, omnibox),
 and CSS-stacked elements within each renderer. The current system manages these
 with scattered magic numbers, duplicated constants, and two completely decoupled

@@ -96,7 +96,7 @@ function PanelHeader({ onClose }: { onClose: () => void }) {
 function PermissionContent({ onAllow }: { onAllow: () => void }) {
   return (
     <>
-      <p className="px-1 text-sm text-white/70">Flow needs permission to access and use your passkeys.</p>
+      <p className="px-1 text-sm text-white/70">Puerta needs permission to access and use your passkeys.</p>
       <button
         type="button"
         onClick={onAllow}

@@ -224,7 +224,7 @@ export const BasicSettings: BasicSetting[] = [
   // [EXPERIMENTAL] Enable Flow PDF Viewer
   {
     id: "enableFlowPdfViewer",
-    name: "Enable Flow PDF Viewer",
+    name: "Enable Puerta PDF Viewer",
     showName: true,
     type: "boolean",
     defaultValue: false
@@ -293,7 +293,7 @@ export const BasicSettingCards: BasicSettingCard[] = [
   // Experimental Settings Card
   {
     title: "Experimental Settings",
-    subtitle: "Experimental settings for Flow",
+    subtitle: "Experimental settings for Puerta",
     settings: ["enableFlowPdfViewer"]
   },
 

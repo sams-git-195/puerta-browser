@@ -1,13 +1,12 @@
 {
-  "name": "flow-browser",
-  "productName": "Flow",
-  "version": "0.12.0",
-  "description": "A modern privacy-focused browser with a minimalistic design.",
+  "name": "puerta-browser",
+  "productName": "Puerta",
+  "version": "0.1.0",
+  "description": "Puerta Browser — your gateway to the internet. An open-source Chromium-based browser with side tabs, forked from Flow Browser.",
   "main": "./out/main/index.js",
   "author": {
-    "name": "iamEvan",
-    "email": "evan@iamevan.dev",
-    "url": "https://iamevan.dev"
+    "name": "Sam",
+    "email": "samheard95@gmail.com"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -16,7 +15,7 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "start": "electron-vite preview",
-    "start:nightly": "bun run scripts/temp-change-name/command --name 'Flow Nightly' electron-vite preview",
+    "start:nightly": "bun run scripts/temp-change-name/command --name 'Puerta Nightly' electron-vite preview",
     "dev": "electron-vite dev",
     "dev:watch": "electron-vite dev --watch",
     "dev:devtools": "cross-env BROWSER_WINDOW_DEVTOOLS=true bun run dev",
@@ -49,7 +48,6 @@
     "knex": "^3.2.9",
     "mime-types": "^3.0.1",
     "objcjs-types": "^0.8.0",
-    "posthog-node": "^5.29.2",
     "sharp": "^0.34.5",
     "tldts": "^7.0.28"
   },

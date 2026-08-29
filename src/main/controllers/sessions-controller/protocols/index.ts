@@ -1,12 +1,12 @@
-import { registerFlowProtocol } from "./_protocols/flow";
-import { registerFlowInternalProtocol } from "./_protocols/flow-internal";
-import { registerFlowExternalProtocol } from "./_protocols/flow-external";
+import { registerFlowProtocol } from "./_protocols/puerta";
+import { registerFlowInternalProtocol } from "./_protocols/puerta-internal";
+import { registerFlowExternalProtocol } from "./_protocols/puerta-external";
 import { protocol, Session } from "electron";
 import type { CustomProtocol } from "./types";
 
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: "flow",
+    scheme: "puerta",
     privileges: {
       standard: true,
       secure: true,
@@ -19,7 +19,7 @@ protocol.registerSchemesAsPrivileged([
     }
   },
   {
-    scheme: "flow-internal",
+    scheme: "puerta-internal",
     privileges: {
       standard: true,
       secure: true,
@@ -32,7 +32,7 @@ protocol.registerSchemesAsPrivileged([
     }
   },
   {
-    scheme: "flow-external",
+    scheme: "puerta-external",
     privileges: {
       standard: true,
       secure: true,
@@ -50,13 +50,13 @@ protocol.registerSchemesAsPrivileged([
 export function registerProtocolsWithSession(session: Session, protocols: CustomProtocol[]) {
   const protocol = session.protocol;
 
-  if (protocols.includes("flow")) {
+  if (protocols.includes("puerta")) {
     registerFlowProtocol(protocol);
   }
-  if (protocols.includes("flow-internal")) {
+  if (protocols.includes("puerta-internal")) {
     registerFlowInternalProtocol(protocol);
   }
-  if (protocols.includes("flow-external")) {
+  if (protocols.includes("puerta-external")) {
     registerFlowExternalProtocol(protocol);
   }
 }

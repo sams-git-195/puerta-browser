@@ -1,1 +1,1 @@
-export type CustomProtocol = "flow" | "flow-internal" | "flow-external";
+export type CustomProtocol = "puerta" | "puerta-internal" | "puerta-external";

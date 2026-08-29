@@ -110,7 +110,7 @@ export function PresenceSidebar({ sidebarMode, targetSidebarModes, direction, or
 const WindowTitle = memo(function WindowTitle() {
   const focusedTab = useFocusedTab();
   if (!focusedTab?.title) return null;
-  return <title>{`${focusedTab.title} | Flow`}</title>;
+  return <title>{`${focusedTab.title} | Puerta`}</title>;
 });
 
 function AutoNewTab({ isReady }: { isReady: boolean }) {

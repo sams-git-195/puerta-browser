@@ -45,7 +45,7 @@ export const defaultQuickLinks: QuickLink[] = [
   {
     id: "history",
     name: "History",
-    url: "flow://history"
+    url: "puerta://history"
   }
 ];
 
@@ -217,7 +217,7 @@ export function QuickLinks({ className = "" }: QuickLinksProps) {
               className="flex flex-col items-center justify-center w-20 bg-white/80 text-gray-800 dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-gray-700/90 rounded-lg p-2 no-underline shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200"
             >
               <div className="mb-1 flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 overflow-hidden">
-                {link.url.startsWith("flow://history") ? (
+                {link.url.startsWith("puerta://history") ? (
                   <History className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
                 ) : (
                   <WebsiteFavicon url={link.url} favicon={link.favicon} className="w-5 h-5 sm:w-6 sm:h-6" />

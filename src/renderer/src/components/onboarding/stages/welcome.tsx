@@ -14,7 +14,7 @@ export function OnboardingWelcome({ advance }: { advance: OnboardingAdvanceCallb
         exit={{ scale: 0.8, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <img src="/assets/icon.png" alt="Flow Browser" className="size-28 rounded-full" />
+        <img src="/assets/icon.png" alt="Puerta Browser" className="size-28 rounded-full" />
       </motion.div>
 
       {/* Content */}
@@ -29,7 +29,7 @@ export function OnboardingWelcome({ advance }: { advance: OnboardingAdvanceCallb
           Welcome to
           <br />
           <span className="bg-gradient-to-r from-[#0066FF] to-[#00AAFF] bg-clip-text text-transparent">
-            Flow Browser
+            Puerta Browser
           </span>
         </h1>
         <p className="text-gray-400 text-lg max-w-md mx-auto">

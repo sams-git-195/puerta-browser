@@ -27,7 +27,7 @@ export interface FlowTabsAPI {
    * Add a callback for tab-sync screenshot placeholder updates.
    * When tab sync is enabled and a tab's view moves to another window,
    * the old window receives the snapshot ID of the tab's last screenshot.
-   * The renderer resolves it through `flow-internal://tab-snapshot?id=...`.
+   * The renderer resolves it through `puerta-internal://tab-snapshot?id=...`.
    * `snapshotId: null` means clear the placeholder.
    * `generation` is monotonic per window and lets the renderer ignore stale updates.
    * @param callback Receives the placeholder payload

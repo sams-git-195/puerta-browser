@@ -13,11 +13,11 @@ export type HonoApp = typeof app;
 // None currently
 
 // Catch-all Route
-registerStaticDomainsRoutes("flow-external", app);
+registerStaticDomainsRoutes("puerta-external", app);
 
 // Export Protocol Handler
 export function registerFlowExternalProtocol(protocol: Protocol) {
-  protocol.handle("flow-external", async (request) => {
+  protocol.handle("puerta-external", async (request) => {
     return app.fetch(request);
   });
 }

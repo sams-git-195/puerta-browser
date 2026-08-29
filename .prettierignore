@@ -6,3 +6,4 @@ tsconfig.json
 tsconfig.*.json
 src/renderer/public/*
 src/renderer/src/lib/omnibox-new/bangs.ts
+docs/superpowers/

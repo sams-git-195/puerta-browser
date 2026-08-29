@@ -17,7 +17,7 @@ import type {
 } from "@/controllers/windows-controller/types/browser";
 
 const omniboxes = new Map<ElectronBrowserWindow, Omnibox>();
-const OMNIBOX_URL = "flow-internal://omnibox/";
+const OMNIBOX_URL = "puerta-internal://omnibox/";
 const DEFAULT_OMNIBOX_WIDTH = 750;
 const DEFAULT_OMNIBOX_HEIGHT = 335;
 const OMNIBOX_SHADOW_PADDING = 30;

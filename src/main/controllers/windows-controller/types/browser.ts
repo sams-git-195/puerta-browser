@@ -93,7 +93,7 @@ export class BrowserWindow extends BaseWindow<BrowserWindowEvents> {
         contextIsolation: true
       },
 
-      title: "Flow",
+      title: "Puerta",
       frame: false,
       transparent: false,
       resizable: true,
@@ -110,9 +110,9 @@ export class BrowserWindow extends BaseWindow<BrowserWindowEvents> {
     sessionsController.whenDefaultSessionReady().then(() => {
       // Load the correct UI
       if (type === "normal") {
-        browserWindow.loadURL("flow-internal://main-ui/");
+        browserWindow.loadURL("puerta-internal://main-ui/");
       } else if (type === "popup") {
-        browserWindow.loadURL("flow-internal://popup-ui/");
+        browserWindow.loadURL("puerta-internal://popup-ui/");
       }
       if (!app.isPackaged && !!process.env.BROWSER_WINDOW_DEVTOOLS) {
         browserWindow.webContents.openDevTools({ mode: "detach" });

@@ -72,7 +72,7 @@ export function craftActiveFaviconURL(tabId: number, faviconURL: string | null) 
     return faviconURL ?? undefined;
   }
 
-  const urlObj = new URL("flow-internal://active-favicon");
+  const urlObj = new URL("puerta-internal://active-favicon");
 
   // Tab ID is used to identify the tab and grab the favicon
   urlObj.searchParams.set("tabId", tabId.toString());

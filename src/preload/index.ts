@@ -60,25 +60,25 @@ function isLocation(protocol: string, hostname: string) {
 type Permission = "all" | "app" | "browser" | "session" | "settings";
 
 function hasPermission(permission: Permission) {
-  const isFlowProtocol = isProtocol("flow:");
-  const isFlowInternalProtocol = isProtocol("flow-internal:");
+  const isFlowProtocol = isProtocol("puerta:");
+  const isFlowInternalProtocol = isProtocol("puerta-internal:");
 
   const isInternalProtocols = isFlowInternalProtocol || isFlowProtocol;
 
   // Browser UI
-  const isMainUI = isLocation("flow-internal:", "main-ui");
-  const isPopupUI = isLocation("flow-internal:", "popup-ui");
+  const isMainUI = isLocation("puerta-internal:", "main-ui");
+  const isPopupUI = isLocation("puerta-internal:", "popup-ui");
   const isBrowserUI = isMainUI || isPopupUI;
 
   // Windows
-  const isNewTab = isLocation("flow:", "new-tab");
-  const isOmniboxUI = isLocation("flow-internal:", "omnibox");
-  const isOmniboxDebug = isLocation("flow:", "omnibox");
+  const isNewTab = isLocation("puerta:", "new-tab");
+  const isOmniboxUI = isLocation("puerta-internal:", "omnibox");
+  const isOmniboxDebug = isLocation("puerta:", "omnibox");
   const isOmnibox = isOmniboxUI || isNewTab || isOmniboxDebug;
 
   // Extensions
-  const isExtensions = isLocation("flow:", "extensions");
-  const isHistoryPage = isLocation("flow:", "history");
+  const isExtensions = isLocation("puerta:", "extensions");
+  const isHistoryPage = isLocation("puerta:", "history");
 
   switch (permission) {
     case "all":

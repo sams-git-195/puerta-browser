@@ -36,7 +36,7 @@ export async function saveImageAs(
     await fs.writeFile(filePath, imageResource.data);
   } catch (error) {
     console.error("Failed to save image from context menu:", error);
-    dialog.showErrorBox("Unable to Save Image", "Flow couldn't save this image from the current page.");
+    dialog.showErrorBox("Unable to Save Image", "Puerta couldn't save this image from the current page.");
   }
 }
 
