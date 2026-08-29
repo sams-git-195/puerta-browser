@@ -1,4 +1,4 @@
-# Contributing to Flow Browser
+# Contributing to Puerta Browser
 
 ## Project Structure
 
@@ -25,8 +25,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/MultiboxLabs/flow-browser.git
-cd flow-browser
+git clone https://github.com/sams-git-195/puerta-browser.git
+cd puerta-browser
 
 # Install dependencies
 bun install
