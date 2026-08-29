@@ -56,6 +56,6 @@
   </categories>
 
   <provides>
-    <binary>flow-browser</binary>
+    <binary>puerta</binary>
   </provides>
 </component>
