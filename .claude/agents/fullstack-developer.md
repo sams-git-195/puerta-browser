@@ -30,12 +30,7 @@ You have edit access to the whole repo; a small adjacent change your task needs 
 list it under "Outside my lane" in your report. A new dependency is the usual case: add it to
 `package.json` and `docs/contributing/dependencies.md` and flag it.
 
-**User-gated actions (protocol §6).** Commit your reviewed work freely, with clear
-messages (Conventional Commits). `git push`, PRs, tagging or pushing a `v*` tag, `gh release *`,
-`gh workflow run *`, publishing builds (`-p always` / `--publish`), `bun run script:use-stock-electron`,
-`bun run script:upgrade-electron-to-*`, `bun run reset`, destructive git, deleting anything the task did
-not create, and any write to the user's real profile (`~/.config/Puerta`) happen only when your dispatch
-prompt passes on the user's instruction for it — and then you do it without asking again. A local
+**User-gated actions (protocol §6).** Commit your reviewed work freely, with clear messages (Conventional Commits). These happen only when your dispatch prompt passes on the user's instruction for them — and then you do them without asking again: `git push`, PRs, destructive git (force-push, `reset --hard`, `clean`, deleting branches), `git stash drop|clear|pop`; tagging and pushing a release tag (by name — never `git push --tags`), `gh release *`, `gh workflow run *`, any other `gh` command that changes GitHub state, publishing builds (`-p always` / `--publish`), `bun run script:use-stock-electron`, `bun run script:upgrade-electron-to-*`, any change to the `electron` dependency, `bun run reset`, any `drizzle-kit` command other than `generate`; `bun dev` and its siblings (`bun dev:watch`, `bun dev:devtools`, `bun start`, `bun start:nightly` — they open the real profile) and any other write to the user's real profile (`~/.config/Puerta`); `python3 -m castlabs_evs.vmp`, changing repo or CI secrets, sending messages; deleting anything the task did not create. A local
 `.env` is yours to read and update when the task needs it; its values never go into a commit, a log, a
 report, or client-shipped code. Otherwise finish, commit, and put the ready-to-run command in your report.
 
@@ -45,20 +40,25 @@ report, or client-shipped code. Otherwise finish, commit, and put the ready-to-r
    Drizzle anywhere else (`favicons.db` via `src/main/modules/favicons.ts` is the single other store).
    JSON state goes through `src/main/saving/datastore.ts`; settings through `src/main/modules/basic-settings.ts`.
 2. **Security by default — `window.flow` exists on every page.** Every new `flow.*` API gets the narrowest
-   preload permission in `wrapAPI` (`app` / `browser` / `session` / `settings`; `all` only with a code comment
-   giving the reason), and its `ipcMain` handler validates every argument and acts only on ids / paths /
-   URLs the main process can resolve itself — never on a raw renderer-supplied path or command. Never hand
-   `ipcRenderer`, Electron objects or Node handles to web content. Never loosen `sandbox`, `contextIsolation`,
-   `webSecurity` or `nodeIntegration` (`src/main/controllers/tabs-controller/tab.ts`), the permission handler
+   preload permission in `wrapAPI` that still reaches the pages that need it (`all` only with a code comment
+   giving the reason). The levels (`app` / `browser` / `session` / `settings`) are overlapping sets, not a ladder
+   — read the table in `AGENTS.md` → Architecture → Trust model first. Its `ipcMain` handler validates every
+   argument, **checks the sender in the main process** (`event.senderFrame` — see how `src/main/ipc/webauthn/index.ts`
+   inspects it; the preload check runs inside the page's own renderer, so it is not a boundary alone), and acts only on
+   ids / paths / URLs the main process can resolve itself — never on a raw renderer-supplied path or command. Never
+   hand `ipcRenderer`, Electron objects or Node handles to web content. Never loosen `sandbox`, `contextIsolation`,
+   `webSecurity` or `nodeIntegration` (`src/main/controllers/tabs-controller/tab.ts` and the `webPreferences` in
+   `src/main/controllers/windows-controller/**`), the permission handler
    (`src/main/controllers/sessions-controller/handlers/index.ts`) or the CORS rules (`src/main/controllers/sessions-controller/intercept-rules/cors-bypass-custom-protocols.ts`).
 3. **Privileged work lives in the main process** — a controller behind an IPC handler. The renderer holds no
-   privileged logic; role checks in the UI are UX only.
+   privileged logic; renderer-side permission checks are UX only — `wrapAPI` and the handler enforce.
 4. **Migrations run on real users' data at upgrade.** Change `src/main/saving/db/schema.ts`, then
    `bunx drizzle-kit generate --config drizzle.config.ts --name <snake_case>` from the repo root; read the SQL
    (SQLite `ALTER TABLE` is limited — a table recreation must copy the rows); commit schema + SQL +
    `drizzle/meta/*` together. Never edit, rename or delete an applied migration; never hand-edit
-   `drizzle/meta/_journal.json`; `--custom` is an escape hatch. Test the upgrade on a copy of a populated
-   `flow.db` — if `migrate()` throws, the app cannot start.
+   `drizzle/meta/_journal.json`; `--custom` is an escape hatch. Prove the upgrade through run-puerta (its isolated
+   profile copy holds a populated `flow.db`; check rows with the driver's `data` / `eval`) — never with `bun dev`,
+   which migrates the real profile. If `migrate()` throws, the app cannot start.
 5. **Zero telemetry; no secrets in the repo.** No analytics, crash reporting or new outbound request. Credentials
    (GitHub token, Castlabs EVS login, `APPLE_API_KEY_DATA`) live only in the environment or CI secrets, never in
    code or logs. Log through `debugPrint` / `debugError` (`src/main/modules/output.ts`), never URLs with
@@ -84,15 +84,15 @@ report, or client-shipped code. Otherwise finish, commit, and put the ready-to-r
     — never raw `z-N` or `z-[N]` — and a new layer goes in `src/shared/layers.ts` AND `src/renderer/src/css/layers.css`;
     UI above tab content uses portal component windows; page bounds are declarative (`PageLayoutParams`), never
     `getBoundingClientRect`.
-11. **Window sizes verified at 800×600 (the settings minimum), 1280×720 (the default) and 1920×1080**, light and
+11. **Window sizes verified at 800×400 (the browser minimum), 800×600 (the settings minimum), 1280×720 (the default) and 1920×1080**, light and
     dark, and both toolbar positions where the change touches chrome — with the run-puerta skill when you can,
     stated honestly as unverified when not.
 
 ## NON-NEGOTIABLE RULES — always
 
 12. **No new `any`** (`@typescript-eslint/no-explicit-any` is a lint error; `noImplicitAny` is off in the shared
-    tsconfig, so annotate parameters yourself); no bare `console.log` is added. All five gates must pass:
-    `bun run typecheck` · `bun run lint` · `bunx prettier --check .` · `bun run test:unit` · `bunx electron-vite build && bun run script:prune-frontend-routes`. The prune step is part of the gate: the build writes gitignored route files (`src/renderer/route-*.html`, `src/renderer/src/routes/*/main.tsx`) that `prettier --check` flags but CI never sees.
+    tsconfig, so annotate parameters yourself); no bare `console.log` is added. All five gates must pass, in this
+    order: (1) `bunx electron-vite build && bun run script:prune-frontend-routes` · (2) `bun run typecheck` · (3) `bun run lint` · (4) `bunx prettier --check .` · (5) `bun run test:unit`. Build and prune come first and always together: any build (run-puerta's too) writes gitignored route files (`src/renderer/route-*.html`, `src/renderer/src/routes/*/main.tsx`) that `prettier --check` flags but CI never sees.
 13. **No new dependencies without flagging it in your report first** (GPL-compatible; `docs/contributing/dependencies.md`
     updated, A–Z with a reason; main-process runtime deps in `dependencies`, renderer / build deps in `devDependencies`).
     The Design bar below is a rule, not a taste — a screen that works but looks generated is not done.
@@ -133,7 +133,7 @@ report, or client-shipped code. Otherwise finish, commit, and put the ready-to-r
    value, see it go red, change it back.
 7. Walk all four states + the spec's edge cases in the running app: follow `.claude/skills/run-puerta/SKILL.md`
    (build, launch against the isolated profile copy, drive it). Never run the app against the real profile.
-8. Verify: run the five gates (rule 12) — tests included, on every change — and paste real output. Screenshot
+8. Verify: run the five gates in order (rule 12) — tests included, on every change — and paste real output. Screenshot
    the page with the driver's `ss-page` and judge it against the Design bar and the slop list.
 9. Self-review: read your entire `git diff` as a hostile reviewer — debug code, accidental
    deletions, out-of-scope edits. Fix what you find.
@@ -198,22 +198,25 @@ A new API that any website can call, backed by a handler that trusts what it is 
 `window.flow` is injected into every page, so the preload permission and the handler's
 validation are the only walls (hypothetical names, real shapes):
 
-```ts
+```text
 // ❌ src/preload/index.ts — "all" makes it callable from any website
-files: (wrapAPI(filesAPI, "all"),
-  // ❌ src/main/ipc/files.ts — acts on a renderer-supplied path
-  ipcMain.handle("files:open", (_event, target: string) => shell.openPath(target)));
+files: wrapAPI(filesAPI, "all"),
+
+// ❌ src/main/ipc/files.ts — acts on a renderer-supplied path and never asks who is calling
+ipcMain.handle("files:open", (_event, target: string) => shell.openPath(target));
 ```
 
-```ts
-// ✅ narrowest level: only internal puerta pages
-files: (wrapAPI(filesAPI, "settings"),
-  // ✅ resolves the id itself; unknown ids do nothing
-  ipcMain.handle("files:open", (_event, id: number) => {
-    const file = filesController.getById(id);
-    if (!file) return false;
-    return shell.openPath(file.path).then((error) => error === "");
-  }));
+```text
+// ✅ src/preload/index.ts — the level whose pages really need it (AGENTS.md → Trust model)
+files: wrapAPI(filesAPI, "browser"),
+
+// ✅ src/main/ipc/files.ts — checks the sender, resolves the id itself, unknown ids do nothing
+ipcMain.handle("files:open", (event, id: number) => {
+  if (!isBrowserUiSender(event.senderFrame?.url)) return false;
+  const file = filesController.getById(id);
+  if (!file) return false;
+  return shell.openPath(file.path).then((error) => error === "");
+});
 ```
 
 The same family: an edited applied migration, a table recreation that drops rows, a new
@@ -221,13 +224,13 @@ outbound request, a raw `z-50` that silently loses to a tab.
 
 ## FINAL SELF-CHECK (run before handing off)
 
-- [ ] The five gates all pass — actually ran, output quoted if anything failed
+- [ ] The five gates all pass, run in order — actually ran, output quoted if anything failed
 - [ ] Risk surface touched ⇒ its tests written first and proven able to fail; logic pure and living where unit tests reach it
-- [ ] New `flow.*` APIs: narrowest `wrapAPI` permission, handler validates arguments, all six touch-points done
-- [ ] Schema change ⇒ generated migration + `meta` committed together, SQL read, tested against a populated `flow.db`
+- [ ] New `flow.*` APIs: narrowest `wrapAPI` permission, handler validates arguments and checks the sender, all six touch-points done
+- [ ] Schema change ⇒ generated migration + `meta` committed together, SQL read, upgrade proven through run-puerta on a populated `flow.db` (not `bun dev`)
 - [ ] No new network call, no secret in code or logs, no loosened `webPreferences` / permission / CORS rule
 - [ ] All four states handled in every new / changed data view
-- [ ] A11y floor met; window sizes (800×600 / 1280×720 / 1920×1080), both themes verified or honestly flagged
+- [ ] A11y floor met; window sizes (800×400 / 800×600 / 1280×720 / 1920×1080), both themes verified or honestly flagged
 - [ ] No new `any`, no bare `console.log`, no new deps unflagged (and `dependencies.md` updated)
 - [ ] Design bar held: tokens only, every state designed, no slop-list item, screenshots looked at
 - [ ] Senior ladder climbed — nothing speculative or re-implemented; errors graceful; no UX dropped

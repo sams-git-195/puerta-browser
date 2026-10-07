@@ -75,7 +75,7 @@ commit the tests and known-issues entries you added. You take no user-gated acti
 **Security (always the first pass)**
 
 - Every new / changed `flow.*` API: narrowest `wrapAPI` permission (and per-method override);
-  the handler validates arguments and, where it matters, the sender / window; nothing privileged
+  the handler validates arguments and checks the sender in the main process (`event.senderFrame?.url`); nothing privileged
   is returned to a page; all six touch-points exist (interface, `src/shared/flow/flow.ts`, preload,
   `src/main/ipc/**`, `src/main/ipc/index.ts`, renderer consumer).
 - No secrets in code, bundles or logs; no secret value committed, logged or reported; no
@@ -83,7 +83,7 @@ commit the tests and known-issues entries you added. You take no user-gated acti
 - For a change on a risk surface, run the security review (`/security-review`) and fold its findings in.
 
 **Web-content isolation & permissions** — `src/main/controllers/tabs-controller/tab.ts` `webPreferences` unchanged; the permission
-handler not widened; CORS bypass still scoped to `puerta*` pages; static serving
+handler not widened; CORS bypass still scoped to `puerta:` and `puerta-internal:` pages; static serving
 (`src/main/controllers/sessions-controller/protocols/static-domains/serve-static.ts`) still free of path traversal; scheme checks before
 `loadURL` / `openExternal`; new `puerta*://` routes registered in `STATIC_DOMAINS` with the right
 session scope.
@@ -123,14 +123,15 @@ no new `any` (Engineering Standard, protocol §2).
 
 ## Your Workflow (follow in order)
 
-1. Read the spec + task breakdown (intended behaviour). 2. `git diff` for actual scope.
-2. Fable process steps 1–3 (plan, then build first). 4. Run the remaining gates, from the repo root:
-   `bun run typecheck` · `bun run lint` · `bunx prettier --check .` · `bun run test:unit` · `bunx electron-vite build && bun run script:prune-frontend-routes`
-   — tests included, on every change. 5. Fable steps 4–6 (read all, refute, trace). 6. Check new
-   behaviour has tests, and new risk-surface logic has tests that can fail (Fable step 8): none = 🔴,
-   always-green = 🟠; where the logic is only reachable by running the app, run it and say so. 7. Optionally
-   write a failing regression test reproducing a confirmed bug. 8. Log any 🟣 to `documentation/known-issues.md`.
-3. Write the report; Final Self-Check.
+1. Read the spec + task breakdown (intended behaviour).
+2. `git diff` for actual scope.
+3. Fable process steps 1–3 (plan, then build first): gate (1) — `bunx electron-vite build && bun run script:prune-frontend-routes`.
+4. Run the remaining gates in order, from the repo root: (2) `bun run typecheck` · (3) `bun run lint` · (4) `bunx prettier --check .` · (5) `bun run test:unit` — tests included, on every change.
+5. Fable steps 4–6 (read all, refute, trace).
+6. Check new behaviour has tests, and new risk-surface logic has tests that can fail (Fable step 8): none = 🔴, always-green = 🟠; where the logic is only reachable by running the app, run it and say so.
+7. Optionally write a failing regression test reproducing a confirmed bug.
+8. Log any 🟣 to `documentation/known-issues.md`.
+9. Write the report; Final Self-Check.
 
 ## Output Format
 

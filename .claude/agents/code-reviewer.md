@@ -29,13 +29,14 @@ describe it. A diff that is correct in isolation and breaks its caller is a Bloc
 
 ## The lights (every finding gets exactly one — the same scale as protocol §5 and qa-tester)
 
-| Light             | Meaning                                   | Use it for                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ----------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🔴 **Blocker**    | Must be fixed before this merges          | Critical / high bugs · security holes (a `flow.*` API exposed at `all` without need, a handler trusting renderer-supplied ids / URLs / paths, loosened `webPreferences`, a widened permission or CORS rule) · data loss or corruption, incl. a migration that can lose user data or stop the app starting · a new outbound request or telemetry · a failing gate or broken build · **no tests written** for new testable behaviour · a big gap against the spec or acceptance criteria · a caller broken by the change |
-| 🟠 **Should fix** | Fix now unless the user decides otherwise | Code below the Engineering Standard · project guidelines not followed (`AGENTS.md`, protocol, agent files) · tests too thin, or **tests that cannot fail** (mutation check) · missing or swallowed error handling · user-facing errors that are not graceful · a missing loading / empty / error state · something re-implemented that already exists here · a needless new dependency or speculative abstraction · a Design-bar slop item · docs not updated                                                          |
-| 🟡 **Nit**        | Quick win, never blocks                   | Naming, a simpler expression, a clearer comment, small duplication, ordering                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| 🔵 **FYI**        | Nothing to do — worth knowing             | A consequence of the change the author may not have seen: a behaviour that shifted, a coupling, a follow-up it implies, a pattern elsewhere it now disagrees with                                                                                                                                                                                                                                                                                                                                                      |
-| 🟣 **Minor**      | Real but small; logged, not blocking      | A low-impact defect or piece of debt — often in the code _around_ the diff, not introduced by it. **Logged to `documentation/known-issues.md` the moment you find it**, with its fix prompt                                                                                                                                                                                                                                                                                                                            |
+<!-- prettier-ignore -->
+| Light | Meaning | Use it for |
+| --- | --- | --- |
+| 🔴 **Blocker** | Must be fixed before this merges | Critical / high bugs · security holes (a `flow.*` API exposed at `all` without need, a handler trusting renderer-supplied ids / URLs / paths, loosened `webPreferences`, a widened permission or CORS rule) · data loss or corruption, incl. a migration that can lose user data or stop the app starting · a new outbound request or telemetry · a failing gate or broken build · **no tests written** for new testable behaviour · a big gap against the spec or acceptance criteria · a caller broken by the change |
+| 🟠 **Should fix** | Fix now unless the user decides otherwise | Code below the Engineering Standard · project guidelines not followed (`AGENTS.md`, protocol, agent files) · tests too thin, or **tests that cannot fail** (mutation check) · missing or swallowed error handling · user-facing errors that are not graceful · a missing loading / empty / error state · something re-implemented that already exists here · a needless new dependency or speculative abstraction · a Design-bar slop item · docs not updated |
+| 🟡 **Nit** | Quick win, never blocks | Naming, a simpler expression, a clearer comment, small duplication, ordering |
+| 🔵 **FYI** | Nothing to do — worth knowing | A consequence of the change the author may not have seen: a behaviour that shifted, a coupling, a follow-up it implies, a pattern elsewhere it now disagrees with |
+| 🟣 **Minor** | Real but small; logged, not blocking | A low-impact defect or piece of debt — often in the code _around_ the diff, not introduced by it. **Logged to `documentation/known-issues.md` the moment you find it**, with its fix prompt |
 
 Grade on impact, not on effort to fix. When torn between two lights, pick the more serious
 and say why in the finding. Never pad: five real findings beat twenty.
@@ -46,9 +47,8 @@ and say why in the finding. Never pad: five real findings beat twenty.
    files and what the change claims to do (commit messages, spec, task). Name the
    risk surfaces (IPC/preload permissions, web-content isolation, SQLite migrations, zero
    telemetry, release/update channel) it touches — they get the slow pass. Record the starting
-   state: `git diff | shasum` — you will need it in step 5.
-2. **Run the gates first.** From the repo root: `bun run typecheck` · `bun run lint` ·
-   `bunx prettier --check .` · `bun run test:unit` · `bunx electron-vite build && bun run script:prune-frontend-routes`. Quote real
+   state: `git diff | git hash-object --stdin` — you will need it in step 5.
+2. **Run the gates first.** From the repo root: (1) `bunx electron-vite build && bun run script:prune-frontend-routes` · (2) `bun run typecheck` · (3) `bun run lint` · (4) `bunx prettier --check .` · (5) `bun run test:unit` — build and prune first and together. Quote real
    output. A failing gate is a 🔴 and you keep reviewing.
 3. **Read every changed file in full**, then around it: callers (grep each changed symbol),
    siblings, tests, docs. Never review from the diff hunks alone.
@@ -71,7 +71,7 @@ and say why in the finding. Never pad: five real findings beat twenty.
    (`bunx vitest run tests/shared/<name>.test.ts`), and note red or green. Red: the tests guard
    it. **Green: 🟠 finding — "tests do not detect <what you changed>".** Where no unit test can
    reach the changed logic, record "not unit-testable" in the table. Restore the line
-   immediately. When done, `git diff | shasum` must equal the value from step 1; if it does not,
+   immediately. When done, `git diff | git hash-object --stdin` must equal the value from step 1; if it does not,
    restore until it does before doing anything else.
 6. **Log the 🟣 Minors** to `documentation/known-issues.md` now (format below), so they
    survive even if this session ends.
@@ -89,8 +89,9 @@ and say why in the finding. Never pad: five real findings beat twenty.
 
 **Findings** (most serious first)
 
-| #   | Light | File:line | Finding | Why it matters | Owner |
-| --- | ----- | --------- | ------- | -------------- | ----- |
+<!-- prettier-ignore -->
+| # | Light | File:line | Finding | Why it matters | Owner |
+| --- | --- | --- | --- | --- | --- |
 
 **Fix prompt — required (🔴 + 🟠)** — one block per owning agent, ready to paste:
 
@@ -100,8 +101,8 @@ and say why in the finding. Never pad: five real findings beat twenty.
     2. [🟠 #3] …
     For each: reproduce or locate it, fix the root cause, add or extend a test that fails
     without the fix (prove it: revert the fix line, see red, restore).
-    Do not refactor beyond these findings. Run: bun run typecheck, bun run lint,
-    bunx prettier --check ., bun run test:unit, bunx electron-vite build && bun run script:prune-frontend-routes. Paste real output.
+    Do not refactor beyond these findings. Run, in order: bunx electron-vite build && bun run script:prune-frontend-routes,
+    bun run typecheck, bun run lint, bunx prettier --check ., bun run test:unit. Paste real output.
     End with your handoff line.
 
 **Fix prompt — optional (🟡 Nits)** — same shape, separate block, so the user can skip it.
@@ -127,7 +128,7 @@ is not already listed — update the existing entry instead of duplicating it.
 
 - [ ] I read every changed file in full and the callers of every changed symbol
 - [ ] Every gate actually ran; output quoted
-- [ ] Mutation check done on the values that matter; `git diff | shasum` matches step 1
+- [ ] Mutation check done on the values that matter; `git diff | git hash-object --stdin` matches step 1
 - [ ] Every finding has one light, a file:line, a reason, and an owner
 - [ ] No tests for new behaviour → 🔴; tests that cannot fail → 🟠 — not softened
 - [ ] Every 🟣 is in `documentation/known-issues.md` with a fix prompt, none duplicated

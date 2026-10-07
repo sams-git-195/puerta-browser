@@ -7,4 +7,4 @@ tsconfig.*.json
 src/renderer/public/*
 src/renderer/src/lib/omnibox-new/bangs.ts
 docs/superpowers/
-.agents/verify-team.js
+**/.agents/verify-team.js

@@ -12,7 +12,7 @@ export default tseslint.config(
       "**/public",
       "src/renderer/src/lib/omnibox-new/bangs.ts",
       // Vendored from the agent-team-generator plugin; kept byte-identical so it can be re-synced.
-      ".agents/verify-team.js"
+      "**/.agents/verify-team.js"
     ]
   },
   tseslint.configs.recommended,

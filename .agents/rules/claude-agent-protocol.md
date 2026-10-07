@@ -15,7 +15,7 @@ running**.
    `AGENTS.md` → Critical gotchas.)
 2. The agent definitions are the operating manual for each discipline: `.claude/agents/*.md` for
    Claude Code, `.opencode/agents/*.md` for OpenCode. They are ports of the same team — when a
-   convention changes, update both sets. In this file, `<agent-dir>` means whichever of the two
+   convention changes, update both sets and run `bun .agents/verify-team.js`. In this file, `<agent-dir>` means whichever of the two
    your harness reads. **Never restate them from memory — read the file and follow it.**
 3. **The user's instruction outranks this protocol's defaults.** If the user asks for
    something specific — a different order, a skipped step, an action from the user-gated list
@@ -82,7 +82,7 @@ Either way, as lead you:
     **Description:** [1–3 sentences]
     **Acceptance:** [testable criteria]
     **Docs:** [documentation/ files and any technical doc from §4 to create/update — or "none (no user-facing change)"]
-    **Quality gates:** the five gates pass (typecheck · lint · format check · unit tests · build) · preload permission and handler validation reviewed for any new `flow.*` API
+    **Quality gates:** the five gates pass in the §5 order (build + prune · typecheck · lint · format check · unit tests) · preload permission and handler validation reviewed for any new `flow.*` API
 
 ## 2. Operate at Fable Level (all models)
 
@@ -144,7 +144,7 @@ simple.
 **Engineering standard (every role that writes code):**
 
 1. Senior ladder first; then the smallest correct change; extend the existing pattern.
-2. Validate at the boundary (every `ipcMain` handler's arguments, URLs from web content or the
+2. Validate at the boundary (every `ipcMain` handler's arguments **and its sender**, URLs from web content or the
    OS, `puerta*://` request paths, extension messages, persisted JSON / DB rows read at
    startup, third-party responses such as content-blocker lists and the update feed); trust
    nothing that crossed one; do not re-validate inside.
@@ -165,7 +165,7 @@ simple.
    saying why it is safe; the legacy `any`s each carry an `eslint-disable` line, and a new one
    needs the same plus a reason.
 6. Names say intent; functions do one thing; no dead or commented-out code; comments say why.
-7. No new dependency without the reason an installed one could not do it; versions pinned;
+7. No new dependency without the reason an installed one could not do it; versions follow the repo's `^` convention and the lockfile is committed;
    `docs/contributing/dependencies.md` updated (A–Z, one reason per entry).
 8. Secrets never in code, bundles, or logs — the app ships no secrets and has no env-file
    convention; `.env` is git-ignored; credentials (GitHub token, Castlabs EVS login,
@@ -190,13 +190,14 @@ passes" · "the rule is obviously…" · "third retry will work" · "I'll write 
 Before any implementation, design, or review work — solo or dispatched — classify it and
 **read the matching agent file**:
 
-| Work type                                                                                | Agent file                           |
-| ---------------------------------------------------------------------------------------- | ------------------------------------ |
-| Requirements, scope, edge cases, abuse analysis                                          | `<agent-dir>/product-specialist.md`  |
-| Technical design, threat model, data and IPC shape                                       | `<agent-dir>/architect.md`           |
+<!-- prettier-ignore -->
+| Work type | Agent file |
+| --- | --- |
+| Requirements, scope, edge cases, abuse analysis | `<agent-dir>/product-specialist.md` |
+| Technical design, threat model, data and IPC shape | `<agent-dir>/architect.md` |
 | Any feature code — main process, preload, renderer, migrations, tests for its own change | `<agent-dir>/fullstack-developer.md` |
-| Verification after every implementation task                                             | `<agent-dir>/qa-tester.md`           |
-| Independent review of a diff (only when the user asks)                                   | `<agent-dir>/code-reviewer.md`       |
+| Verification after every implementation task | `<agent-dir>/qa-tester.md` |
+| Independent review of a diff (only when the user asks) | `<agent-dir>/code-reviewer.md` |
 
 When dispatching (Claude Code: the Agent tool with `subagent_type`; OpenCode: the subagent
 tool with the agent's ID):
@@ -208,18 +209,22 @@ tool with the agent's ID):
    prompt in their words; otherwise the subagent must not take it.
 3. **Model selection**: each agent's frontmatter pins its baseline model (Claude Code: `opus`,
    the current Opus 5.5; OpenCode: `anthropic/claude-opus-5-5`). Override it for one dispatch
-   only when the row's trigger applies. **Never Haiku, in any dispatch.**
-
-   | Agent               | Claude Code | OpenCode                    | Step up / down when                                                                                                                                                                |
-   | ------------------- | ----------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | product-specialist  | opus        | `anthropic/claude-opus-5-5` | up to Fable (`fable` / `anthropic/claude-fable-5-1`) for specs on the IPC trust boundary, migrations or the privacy promise; never down                                            |
-   | architect           | opus        | `anthropic/claude-opus-5-5` | up to Fable for designs touching the preload permission model, protocol handlers, migrations or the update channel; never down                                                     |
-   | fullstack-developer | opus        | `anthropic/claude-opus-5-5` | up to Fable for IPC permission changes, migrations, protocol / static serving, view layering; down to Sonnet 5.5 only for renames, formatting, single-line fixes and comment edits |
-   | qa-tester           | opus        | `anthropic/claude-opus-5-5` | up to Fable for any change on a risk surface; never down                                                                                                                           |
-   | code-reviewer       | opus        | `anthropic/claude-opus-5-5` | up to Fable for IPC, protocol, migration or release-workflow diffs; never down                                                                                                     |
-
+   only when the matrix below says so. **Never Haiku, in any dispatch** — and built-in or plugin
+   subagent types (Explore, Plan, general-purpose, …) choose their own model unless you pass one:
+   always pass `model: opus` (or `fable`) explicitly.
 4. **Reject reports without evidence.** Implementer reports must include real gate output and
    end with their handoff line (`Implementation Complete → …`). Missing = not done.
+
+**Model matrix** (item 3):
+
+<!-- prettier-ignore -->
+| Agent | Claude Code | OpenCode | Step up / down when |
+| --- | --- | --- | --- |
+| product-specialist | opus | `anthropic/claude-opus-5-5` | up to Fable (`fable` / `anthropic/claude-fable-5-1`) for specs on the IPC trust boundary, migrations or the privacy promise; never down |
+| architect | opus | `anthropic/claude-opus-5-5` | up to Fable for designs touching the preload permission model, protocol handlers, migrations or the update channel; never down |
+| fullstack-developer | opus | `anthropic/claude-opus-5-5` | up to Fable for IPC permission changes, migrations, protocol / static serving, view layering; down to Sonnet 5.5 only for renames, formatting, single-line fixes and comment edits |
+| qa-tester | opus | `anthropic/claude-opus-5-5` | up to Fable for any change on a risk surface; never down |
+| code-reviewer | opus | `anthropic/claude-opus-5-5` | up to Fable for IPC, protocol, migration or release-workflow diffs; never down |
 
 ## 4. Documentation Contract
 
@@ -237,7 +242,8 @@ for future model sessions with zero context. Structure:
 - `documentation/known-issues.md` — accepted minor issues, each with a ready-to-run fix
   prompt (written by the code-reviewer; anyone who fixes an entry deletes it).
 - **Specs and plans stay where this repo already keeps them:**
-  `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` and
+  `docs/superpowers/specs/YYYY-MM-DD-<slug>-requirements.md` (product-specialist),
+  `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (architect) and
   `docs/superpowers/plans/YYYY-MM-DD-<slug>.md` — not `documentation/specs/`.
 
 **Technical docs travel with the code** (`docs/` and `design/` — developer-facing, not
@@ -258,10 +264,13 @@ descriptive (what and why), not implementation dumps.
 of `<agent-dir>/qa-tester.md`:
 
 1. `git diff` — re-read every changed file with fresh eyes against the qa-tester checklist.
-2. Run and paste real output, from the repo root — the five gates, tests included on every
-   change, not only when a risk surface is touched:
-   `bun run typecheck` · `bun run lint` · `bunx prettier --check .` (CI runs `bun run format`
-   and fails on any resulting diff) · `bun run test:unit` · `bunx electron-vite build && bun run script:prune-frontend-routes`. The prune step is part of the gate: the build writes gitignored route files (`src/renderer/route-*.html`, `src/renderer/src/routes/*/main.tsx`) that `prettier --check` flags but CI never sees.
+2. Run and paste real output, from the repo root — the five gates **in this order**, tests included
+   on every change, not only when a risk surface is touched: (1) `bunx electron-vite build &&
+bun run script:prune-frontend-routes` · (2) `bun run typecheck` · (3) `bun run lint` ·
+   (4) `bunx prettier --check .` (CI runs `bun run format` and fails on any resulting diff) ·
+   (5) `bun run test:unit`. Build and prune come first and always together: any build (also
+   run-puerta's) writes gitignored route files (`src/renderer/route-*.html`,
+   `src/renderer/src/routes/*/main.tsx`) that `prettier --check` flags but CI never sees.
 3. Findings as `| Light | File | Line | Issue |` using the lights below. Fix every 🔴 and 🟠,
    re-run the gates.
 4. The **last line** of your completion report is `QA PASS` or `QA FAIL (reason: …)`. Never
@@ -272,13 +281,14 @@ self-reviewing — fresh context catches what the author cannot.
 
 **The lights — one scale for self-QA, qa-tester and code-reviewer:**
 
-| Light             | Meaning                                                                                                                                                                                                                             | Effect                                                                    |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 🔴 **Blocker**    | Critical or high: security hole, data loss, wrong result on a risk surface, broken build or failing gate, feature broken for a user flow, no tests for new behaviour, a big gap against the spec                                    | QA FAIL · review BLOCKED                                                  |
-| 🟠 **Should fix** | Below the engineering standard or the project's guidelines: missing state or error handling, ungraceful user-facing error, thin tests or tests that cannot fail, something re-implemented, a Design-bar slop item, docs not updated | QA FAIL · review FIX FIRST                                                |
-| 🟡 **Nit**        | A quick quality win: naming, a simpler expression, small duplication                                                                                                                                                                | never blocks                                                              |
-| 🔵 **FYI**        | Worth knowing, nothing to do                                                                                                                                                                                                        | never blocks                                                              |
-| 🟣 **Minor**      | A real but small issue, often in code around the change                                                                                                                                                                             | logged to `documentation/known-issues.md` with a fix prompt; never blocks |
+<!-- prettier-ignore -->
+| Light | Meaning | Effect |
+| --- | --- | --- |
+| 🔴 **Blocker** | Critical or high: security hole, data loss, wrong result on a risk surface, broken build or failing gate, feature broken for a user flow, no tests for new behaviour, a big gap against the spec | QA FAIL · review BLOCKED |
+| 🟠 **Should fix** | Below the engineering standard or the project's guidelines: missing state or error handling, ungraceful user-facing error, thin tests or tests that cannot fail, something re-implemented, a Design-bar slop item, docs not updated | QA FAIL · review FIX FIRST |
+| 🟡 **Nit** | A quick quality win: naming, a simpler expression, small duplication | never blocks |
+| 🔵 **FYI** | Worth knowing, nothing to do | never blocks |
+| 🟣 **Minor** | A real but small issue, often in code around the change | logged to `documentation/known-issues.md` with a fix prompt; never blocks |
 
 **Security review.** Before a merge that touches a risk surface, run `/security-review`
 (Claude Code built-in; OpenCode: the generated `.opencode/commands/security-review.md`) and
@@ -299,49 +309,54 @@ and nothing is blocked mechanically. **A permission is not an instruction.** Wha
 is set by what the user has asked for.
 
 **Free — do it without asking:** read anything; edit any file the task needs; run gates,
-tests, builds and dev servers (`bun dev`, `bunx electron-vite build`, the run-puerta driver
-against its isolated profile copy); create branches (`feat/…`, `fix/…`, `chore/…`, `docs/…`);
+tests and builds; run the app only through the run-puerta driver against its isolated profile
+copy (never `bun dev` — it opens the real profile); create branches (`feat/…`, `fix/…`, `chore/…`, `docs/…`);
 `git add` and `git commit` (Conventional Commits — `feat:`, `fix:`, `chore:`, `docs:`,
 `style:`; scoped, clear message, only files touched for the task); install a dependency the
 task requires (flag it in the report).
 
 **User-gated — only when the user has told you to, in this conversation:**
 
-- `git push` (any branch), opening or merging a PR, tags, releases, publishing a package
-- anything that ships or changes the runtime: tagging or pushing a `v*` tag (`git push origin v*`,
-  `git push --tags` — a tag push publishes a GitHub release through
-  `.github/workflows/build-and-release.yml`), `gh release *`, `gh workflow run *`, publishing
-  builds (`electron-builder` with `-p always` or `--publish`), `bun run script:use-stock-electron`
-  (drops Widevine), `bun run script:upgrade-electron-to-*`, `bun run reset`. There is no
-  shared or production database — Drizzle migrations only ever run against a local SQLite
-  (`flow.db`) when the app starts, so the migration risk is destroying a user's data on
-  upgrade (see `AGENTS.md` → Data layer), not a deploy step
+- `git push` (any branch), opening or merging a PR, publishing a package
 - destructive git: force-push, `reset --hard`, `clean`, deleting branches, discarding
-  uncommitted work you did not create
-- deleting files or data the task did not create; dropping tables or data; **any write to the
-  user's real profile (`~/.config/Puerta`)** — verification runs use run-puerta's isolated
-  copy only
-- sending messages, or calling live or paid external services (GitHub release / workflow
-  writes, the Castlabs EVS login `python3 -m castlabs_evs.vmp`, notarization credentials
-  `APPLE_API_KEY_DATA`); changing secrets anywhere that is not this machine (repo or CI
-  secrets)
+  uncommitted work you did not create; `git stash drop|clear|pop` (the stash is shared by every worktree)
+- **anything that ships or changes the runtime:** tagging and pushing a release tag
+  (`git push origin vX.Y.Z` — one tag, by name, after `git ls-remote --tags origin`; a `v*` tag push
+  publishes a GitHub release through `.github/workflows/build-and-release.yml`; **never
+  `git push --tags`**), `gh release *`, `gh workflow run *`, any other `gh` command that changes
+  GitHub state, publishing builds (`electron-builder` with `-p always` or `--publish`),
+  `bun run script:use-stock-electron` (drops Widevine), `bun run script:upgrade-electron-to-*`, any
+  change to the `electron` dependency, `bun run reset`, any `drizzle-kit` command other than
+  `generate`. There is no shared or production database — Drizzle migrations only ever run against a
+  local SQLite (`flow.db`) when the app starts, so the migration risk is destroying a user's data on
+  upgrade (see `AGENTS.md` → Data layer), not a deploy step
+- **anything that touches the user's real state:** `bun dev`, `bun dev:watch`, `bun dev:devtools`,
+  `bun start`, `bun start:nightly` (they open the real profile `~/.config/Puerta` and apply pending
+  migrations to it — an isolated alternative is `XDG_CONFIG_HOME=$(mktemp -d)`, per the run-puerta
+  skill), any other write to that profile, deleting files or data the task did not create, dropping
+  tables or data
+- sending messages, or calling live or paid external services (the Castlabs EVS login
+  `python3 -m castlabs_evs.vmp`, notarization credentials `APPLE_API_KEY_DATA`); changing secrets
+  anywhere that is not this machine (repo or CI secrets)
 
 **Remotes and tags.** `origin` is `sams-git-195/puerta-browser`; `upstream` is
 `MultiboxLabs/flow-browser` — never push to `upstream`. `gh` commands always pass
 `--repo sams-git-195/puerta-browser` (the fork defaults to upstream). Local tags include
-upstream Flow's: ask the remote, not `git tag` (`git ls-remote --tags origin`), and never
-`git push --tags`.
+upstream Flow's: ask the remote what is released (`git ls-remote --tags origin`), and push a
+tag only by name — never `git push --tags`, which would publish upstream's tags.
 
 **Local secrets are not gated.** Read and update a local `.env` (git-ignored; none exists
 today) when the task needs it — it is local to this machine. What never happens, instructed
 or not: a secret value in a commit, a log line, a report, or client-shipped code. The
-run-puerta `.data/` directory is a copy of the real profile (cookies, history): never read,
-print, search or commit its contents.
+run-puerta `.data/` directory is a partial copy of the real profile (`datastore/` + `flow.db`:
+tabs, history, bookmarks) plus whatever test runs add: never read, print, search or commit its
+contents; inspect state through the driver's `data` / `eval` commands.
 
 **How an instruction works:**
 
 - When the user has asked for a gated action, **do it — don't ask again.** "Commit and push"
-  means push. "Cut a release" means tag and push the tag. That is the point of open permissions.
+  means push. "Cut a release" means the bump commit, the push, the tag and the tag push
+  (recipe: `AGENTS.md` → Critical gotchas → Release). That is the point of open permissions.
 - An instruction covers what it says, for the task it was given. "Push" on one task is not a
   standing grant for the next.
 - No instruction yet? Finish everything else, commit, and end the report with the exact

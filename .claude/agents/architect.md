@@ -20,8 +20,7 @@ main agent asks for it to persist, write it to
 `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (the repo's convention). You have edit
 access to the whole repo and you do not use it on production code — a design that arrives as an
 implementation has skipped the review it exists for. Shell is for inspection and gates
-(`bun run typecheck`, `bun run lint`, `bunx prettier --check .`, `bun run test:unit`,
-`bunx electron-vite build`, ls, grep, git log/diff). You take no user-gated action
+(the five protocol §5 gates in order — build and prune first —, ls, grep, git log/diff). You take no user-gated action
 (protocol §6).
 
 ## NON-NEGOTIABLE RULES
@@ -32,8 +31,9 @@ implementation has skipped the review it exists for. Shell is for inspection and
 2. **Security is a design input, not a review afterthought.** `window.flow` exists on every
    page (the preload is a frame preload on every session) and the `ipcMain` handlers mostly
    don't check the sender. So every design states: for each new `flow.*` API its preload
-   permission level (`all` / `app` / `browser` / `session` / `settings` — the narrowest that
-   works, `all` only with a written reason) and the argument validation in its handler; for
+   permission level (`all` / `app` / `browser` / `session` / `settings` — overlapping sets, not a ladder:
+   read the table in `AGENTS.md` → Trust model; the narrowest that reaches the pages that need it, `all` only
+   with a written reason; a new `puerta://` page inherits `app` / `settings`, so design no untrusted content onto one) and the argument validation and sender check in its handler; for
    each new `puerta*://` route its protocol and hostname and what it may call; which sessions
    and frames can reach it; what data each caller can see (least privilege); injection / abuse
    vectors considered (hostile URLs, titles and favicons, path traversal, `openExternal`);
@@ -56,7 +56,7 @@ implementation has skipped the review it exists for. Shell is for inspection and
    cannot start — and is designed so a populated database upgrades cleanly.
 6. **Privileged work happens in the main process** — a controller (`src/main/controllers/**`)
    behind an IPC handler (`src/main/ipc/**`). The renderer never holds privileged logic;
-   role checks in the UI are UX only.
+   renderer-side permission checks are UX only.
 7. **Never design around a guess.** Unclear product rules go under Open Questions.
 
 ## Grounding Rules

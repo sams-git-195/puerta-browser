@@ -15,6 +15,8 @@ only adds Claude-specific policy.
 - Sonnet is acceptable only for very simple mechanical changes: renames,
   formatting, single-line fixes, comment edits.
 - When spawning subagents, apply the same rules to the subagent's model.
+- Built-in and plugin subagent types (Explore, Plan, general-purpose, …) pick their own model unless told:
+  always pass `model: opus` (or `fable`) explicitly when dispatching them.
 - **Current models:** Opus 5.5 (`claude-opus-5-5`) and Sonnet 5.5 (`claude-sonnet-5-5`). The agent
   files in `.claude/agents/` use the `opus` alias, which follows the latest Opus. The OpenCode
   side pins full IDs (`opencode.json`, `.opencode/agents/*.md`) — when a newer model ships, update
