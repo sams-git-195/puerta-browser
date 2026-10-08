@@ -92,6 +92,10 @@ Once logged in, the app will be automatically VMP-signed, and you can enjoy Wide
 ## AI coding agents
 
 This repo ships agent configuration: [AGENTS.md](./AGENTS.md) is the source of
-truth for any AI coding agent (setup, commands, coding practices), and
-[CLAUDE.md](./CLAUDE.md) adds Claude-specific model policy. If you use an AI
-assistant, point it at those files.
+truth for any AI coding agent (setup, commands, gotchas),
+[.agents/rules/claude-agent-protocol.md](./.agents/rules/claude-agent-protocol.md)
+is the team process (roles, quality gates, what agents may do only when asked),
+and [CLAUDE.md](./CLAUDE.md) adds Claude-specific model policy. The specialist
+agents live in `.claude/agents/` (Claude Code) and `.opencode/agents/`
+(OpenCode) and are kept in step; permissions are in `.claude/settings.json` and
+`opencode.json`. If you use an AI assistant, point it at those files.

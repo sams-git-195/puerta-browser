@@ -4,7 +4,17 @@ import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
 
 export default tseslint.config(
-  { ignores: ["**/node_modules", "**/dist", "**/out", "**/public", "src/renderer/src/lib/omnibox-new/bangs.ts"] },
+  {
+    ignores: [
+      "**/node_modules",
+      "**/dist",
+      "**/out",
+      "**/public",
+      "src/renderer/src/lib/omnibox-new/bangs.ts",
+      // Vendored from the agent-team-generator plugin; kept byte-identical so it can be re-synced.
+      "**/.agents/verify-team.js"
+    ]
+  },
   tseslint.configs.recommended,
   eslintPluginReact.configs.flat.recommended,
   eslintPluginReact.configs.flat["jsx-runtime"],
