@@ -85,7 +85,10 @@ const electronBuilderConfig: Configuration = {
       to: "drizzle"
     }
   ],
+  // Windows: unsigned x64 NSIS installer. Without Castlabs EVS credentials the VMP step in
+  // afterSign fails softly, so Widevine (DRM streaming) will not play on Windows builds.
   win: {
+    target: [{ target: "nsis", arch: ["x64"] }],
     executableName: "puerta",
     verifyUpdateCodeSignature: false
   },
@@ -113,14 +116,15 @@ const electronBuilderConfig: Configuration = {
     icon: "./build/volume-icon.icns"
   },
   linux: {
-    target: ["AppImage", "deb", "rpm"],
+    // x64 only. AppImage dropped: deb + rpm cover the supported distros.
+    target: [
+      { target: "deb", arch: ["x64"] },
+      { target: "rpm", arch: ["x64"] }
+    ],
     executableName: "puerta",
     category: "Network;WebBrowser;",
     executableArgs: ["--ozone-platform-hint=auto"],
     icon: "icon.png"
-  },
-  appImage: {
-    artifactName: "${name}-${version}-${arch}.${ext}"
   },
   rpm: {
     artifactName: "${name}-${version}-${arch}.${ext}"

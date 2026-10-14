@@ -6,8 +6,8 @@ Claude-specific model policy lives in `CLAUDE.md`.
 ## Product context
 
 - Puerta ("door") is an open-source, **zero-telemetry** desktop browser with side tabs and spaces
-  (the Arc/Dia style), built on Chromium through Electron, **Linux-first** (AppImage / deb / rpm,
-  x64 + arm64). A GPL-3.0-only fork of Flow Browser (MultiboxLabs), continued independently.
+  (the Arc/Dia style), built on Chromium through Electron, **Linux-first** (deb / rpm, x64) with an
+  unsigned Windows x64 NSIS installer. A GPL-3.0-only fork of Flow Browser (MultiboxLabs), continued independently.
   No external backend — all user data is local.
 - Stack: Electron 41 (Castlabs fork, Widevine) · React 19 · TypeScript 6 · electron-vite 5 / Vite 8 ·
   Tailwind 4 · shadcn / Radix / Base UI · SQLite (better-sqlite3 + Drizzle) · Hono (protocol
@@ -97,7 +97,7 @@ together — same roster, same rules, same policy — then run `bun .agents/veri
 - **Quality gates: all five, in this order, must pass on every change** — tests included, not only when a
   risk surface is touched. CI (`.github/workflows/checks.yml`) runs typecheck + lint, tests, and format
   (`bun run format` then `git diff --exit-code`) as separate jobs on every PR and push to `main`;
-  `build.yml` builds the Linux packages on PRs. Baseline today: 6 test files / 29 tests green.
+  `build.yml` builds the Linux and Windows packages on PRs. Baseline today: 6 test files / 29 tests green.
 - `bash scripts/lint-z-index.sh` is not in CI and currently exits 1 with 6 pre-existing hits
   (`src/renderer/src/components/ui/popover.tsx`, `src/renderer/src/routes/bangs/page.tsx`,
   `src/renderer/src/routes/history/page.tsx`). Add no new ones.
@@ -110,7 +110,7 @@ together — same roster, same rules, same policy — then run `bun .agents/veri
 - **Bun only** — never npm / pnpm / yarn, never bare `node` / `vite` for project scripts (the run-puerta
   driver is the one documented `node` call; `.agents/verify-team.js` runs with `bun`). CI pins Bun 1.3.10 and Node 22.
 - **The `electron` dependency is a Castlabs fork** (`castlabs/electron-releases`, Widevine DRM). Normal.
-  `script:use-stock-electron` drops Widevine (only the arm64 CI leg uses it) — never run or commit its result.
+  `script:use-stock-electron` drops Widevine (no CI leg uses it since arm64 was dropped) — never run or commit its result.
 - **Names that must not change:** the internal IPC namespace is still `flow` (`window.flow`, `src/shared/flow/`,
   `Flow*API` types, `flow.db`, `FLOW_DATA_DIR`, preload id `flow-preload`); the public URL schemes are
   `puerta://`, `puerta-internal://`, `puerta-external://`. Identity chain: package `puerta-browser`, productName
@@ -234,7 +234,7 @@ Defaults live in `src/main/modules/basic-settings.ts`; changing one is a product
 | Other defaults | `newTabMode` omnibox · `commandPaletteOpacity` tinted · `contentBlocker` disabled · `autoUpdate` on · `syncTabsAcrossWindows` off · `enableFlowPdfViewer` off · `enableMv2Extensions` off |
 | Profiles / spaces | Initial profile id `main`; spaces belong to a profile and carry a per-space theme colour; incognito = internal ephemeral profile, cleaned at startup |
 | Sync | `⚠️ undecided — not built`. Direction on record: per-device op-log in a user-chosen folder, no Puerta server, never cookies or sessions (`docs/superpowers/specs/2026-08-29-sync-research-memo.md`) |
-| Platforms | Linux releases only; macOS / Windows builds are parked until signing credentials exist |
+| Platforms | Linux x64 (deb, rpm) and Windows x64 (NSIS `.exe`, unsigned, no Widevine VMP signing); macOS parked until Apple signing credentials exist |
 
 ## UI
 

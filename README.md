@@ -3,7 +3,7 @@
 **Puerta** ("door" in Spanish) — your gateway to the internet.
 
 A modern, open-source browser with side tabs, built on Chromium via Electron —
-the Arc/Dia-style browsing experience, available on Linux.
+the Arc/Dia-style browsing experience, available on Linux and Windows.
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -16,10 +16,13 @@ the Arc/Dia-style browsing experience, available on Linux.
 - **Zero telemetry** — Puerta ships with no analytics of any kind.
 - **Offline games** — `puerta://games` for when the internet is down.
 
-## Install (Linux)
+## Install
 
-Download the AppImage, `.deb`, or `.rpm` from
-[GitHub Releases](https://github.com/sams-git-195/puerta-browser/releases).
+Download from [GitHub Releases](https://github.com/sams-git-195/puerta-browser/releases):
+
+- **Linux (x64):** `.deb` (Debian / Ubuntu) or `.rpm` (Fedora / openSUSE).
+- **Windows (x64):** the `-setup.exe` installer. It is not code-signed yet, so Windows
+  SmartScreen asks for confirmation, and DRM-protected streaming (Widevine) does not play.
 
 ## Development
 
