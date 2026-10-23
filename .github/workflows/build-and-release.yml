@@ -27,7 +27,9 @@ jobs:
       # One platform failing must not cancel the other's artifacts.
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        # windows-2022, not windows-latest: better-sqlite3 compiles from source for the Castlabs
+        # Electron, and node-gyp 11 cannot find the newer Visual Studio on windows-latest.
+        os: [ubuntu-latest, windows-2022]
 
     steps:
       - name: Check out Git repository
@@ -61,7 +63,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build for Windows
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2022'
         run: bun run build:win -p always
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
