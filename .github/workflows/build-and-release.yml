@@ -15,16 +15,21 @@ on:
 run-name: Release ${{ github.ref_name }}
 
 jobs:
-  # macOS/Windows builds removed — require Apple signing + Castlabs EVS credentials we don't have yet.
-  # Re-add from upstream history if credentials materialize.
+  # Targets: Linux x64 (deb + rpm) and Windows x64 (NSIS .exe). macOS stays off until Apple signing
+  # credentials exist. Windows builds are unsigned and not VMP-signed (no Castlabs EVS login), so
+  # Windows shows a SmartScreen prompt and cannot play Widevine DRM content.
   # The Flatpak setup was removed too: it served upstream's Flathub packaging, which does not apply
   # to this fork.
   release:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      # One platform failing must not cancel the other's artifacts.
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm]
+        # windows-2022, not windows-latest: better-sqlite3 compiles from source for the Castlabs
+        # Electron, and node-gyp 11 cannot find the newer Visual Studio on windows-latest.
+        os: [ubuntu-latest, windows-2022]
 
     steps:
       - name: Check out Git repository
@@ -40,21 +45,11 @@ jobs:
         with:
           bun-version: 1.3.10
 
-      - name: Use Stock Electron (Ubuntu ARM only)
-        if: matrix.os == 'ubuntu-24.04-arm'
-        run: bun run script:use-stock-electron
-
       - name: Install Build Dependencies (Ubuntu only)
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y elfutils dpkg fakeroot rpm
-
-      - name: Install Additional Build Dependencies (Ubuntu ARM only)
-        if: matrix.os == 'ubuntu-24.04-arm'
-        run: |
-          sudo apt-get install -y ruby ruby-dev
-          sudo gem install --no-document fpm -v 1.17.0
 
       - name: Install Dependencies
         run: bun install --development --frozen-lockfile
@@ -62,10 +57,15 @@ jobs:
           SHARP_IGNORE_GLOBAL_LIBVIPS: 1
 
       - name: Build for Linux
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-24.04-arm'
+        if: matrix.os == 'ubuntu-latest'
         run: bun run build:linux -p always
         env:
-          USE_SYSTEM_FPM: ${{ matrix.os == 'ubuntu-24.04-arm' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build for Windows
+        if: matrix.os == 'windows-2022'
+        run: bun run build:win -p always
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Build Artifacts
@@ -74,11 +74,7 @@ jobs:
           name: ${{ matrix.os }}
           path: |
             dist/*.exe
-            dist/*.zip
-            dist/*.dmg
-            dist/*.AppImage
             dist/*.deb
             dist/*.rpm
-            dist/*.tar.gz
             dist/*.yml
             dist/*.blockmap
