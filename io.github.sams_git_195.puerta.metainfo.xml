@@ -43,6 +43,15 @@
   </requires>
 
   <releases>
+    <release version="0.3.0" date="2026-10-23">
+      <description>
+        <p>New platform and packaging changes:</p>
+        <ul>
+          <li>Windows x64 installer (.exe). It is not code-signed yet, so Windows SmartScreen asks for confirmation, and DRM-protected streaming does not play on Windows</li>
+          <li>Linux packages are now .deb and .rpm for x64; the AppImage and arm64 builds are discontinued</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-08-29">
       <description>
         <p>Dia/Zen-style browsing features:</p>
